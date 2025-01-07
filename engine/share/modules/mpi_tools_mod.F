@@ -83,6 +83,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -134,12 +135,12 @@ C-----------------------------------------------
              MSGTYP = 17000 
              CALL MPI_IRECV(
      1        MY_STRUCT%BUFFER_VAL(P) ,1,REAL,IT_SPMD(P),MSGTYP,
-     2         MPI_COMM_WORLD,MY_STRUCT%RQ_RECV_VAL(P),IERROR)
+     2         COMM_RADIOSS,MY_STRUCT%RQ_RECV_VAL(P),IERROR)
 
              MSGTYP = 17001 
              CALL MPI_IRECV(
      1        MY_STRUCT%BUFFER_TAB(1,P),MY_STRUCT%LENGTH_TAB,MPI_INTEGER,IT_SPMD(P),MSGTYP,
-     2         MPI_COMM_WORLD,MY_STRUCT%RQ_RECV_TAB(P),IERROR)
+     2         COMM_RADIOSS,MY_STRUCT%RQ_RECV_TAB(P),IERROR)
         ENDIF
       ENDDO
       DO P = 1, NSPMD
@@ -147,12 +148,12 @@ C-----------------------------------------------
              MSGTYP = 17000 
              CALL MPI_ISEND(
      1        MY_STRUCT%VAL ,1,REAL,IT_SPMD(P),MSGTYP,
-     2         MPI_COMM_WORLD,MY_STRUCT%RQ_SEND_VAL(P),IERROR)
+     2         COMM_RADIOSS,MY_STRUCT%RQ_SEND_VAL(P),IERROR)
 
              MSGTYP = 17001 
              CALL MPI_ISEND(
      1        MY_STRUCT%TAB,MY_STRUCT%LENGTH_TAB,MPI_INTEGER,IT_SPMD(P),MSGTYP,
-     2         MPI_COMM_WORLD,MY_STRUCT%RQ_SEND_TAB(P),IERROR)
+     2         COMM_RADIOSS,MY_STRUCT%RQ_SEND_TAB(P),IERROR)
          ENDIF
       ENDDO
 
@@ -183,6 +184,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s

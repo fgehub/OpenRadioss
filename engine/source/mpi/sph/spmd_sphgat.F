@@ -48,6 +48,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -121,7 +122,7 @@ C
 !   alltoall communication with uniform size
 !   for real array : send : SBUFCOM --> rcv : BUFCOM
       CALL SPMD_IALLTOALL(SBUFCOM,BUFCOM,2*NSPMD,2, 
-     .                     2*NSPMD,2,REQUEST_SBUF,MPI_COMM_WORLD)
+     .                     2*NSPMD,2,REQUEST_SBUF,COMM_RADIOSS)
 !   -------------------------
 
 
@@ -306,7 +307,7 @@ C reallocation des tags cellule active a envoyer
       CALL SPMD_IALLTOALLV_INT(INDEX,LSPHS,
      .          SEND_SIZE_INDEX,TOTAL_SEND_SIZE_INDEX,DISPLS_INDEX,
      .          TOTAL_RCV_SIZE_LSPHS,RCV_SIZE_LSPHS,DISPLS_LSPHS,
-     .          REQUEST_INDEX,MPI_COMM_WORLD,NSPMD)
+     .          REQUEST_INDEX,COMM_RADIOSS,NSPMD)
 !   -------------------------
 
 #if _PLMPI

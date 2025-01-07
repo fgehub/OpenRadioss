@@ -36,6 +36,7 @@ C-----------------------------------------------
 #include "implicit_f.inc"
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 #include "com04_c.inc"
 #include "task_c.inc"
@@ -122,7 +123,7 @@ C-----------------------------------------------
           
            CALL MPI_REDUCE(XSECTMP,XSEC,LEN,
      .                  REAL,MPI_SUM,IT_SPMD(1),
-     .                  MPI_COMM_WORLD,IERROR)
+     .                  COMM_RADIOSS,IERROR)
 
 
 C  

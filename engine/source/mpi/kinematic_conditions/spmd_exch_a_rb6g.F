@@ -45,6 +45,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -82,7 +83,7 @@ C-----------------------------------------------
           MSGTYP = MSGOFF 
           CALL MPI_IRECV(
      .      BUF(IDEB),LEN,MPI_DOUBLE_PRECISION,IT_SPMD(P),
-     .      MSGTYP,MPI_COMM_WORLD,REQ(P-1),IERROR    )
+     .      MSGTYP,COMM_RADIOSS,REQ(P-1),IERROR    )
           IDEB = IDEB+LEN
         END DO
         DO IRB = 1, NRBYKIN
@@ -199,7 +200,7 @@ C-----------------------------------------------
         ENDDO
         LEN=NRBYKIN*A_AR
         CALL MPI_BCAST(RBF6,LEN,MPI_DOUBLE_PRECISION,IT_SPMD(PMAIN),
-     .                 MPI_COMM_WORLD,IERROR)
+     .                 COMM_RADIOSS,IERROR)
 C
       ELSE
         IDEB = 1
@@ -262,10 +263,10 @@ C
         MSGTYP = MSGOFF 
         LEN=IDEB-1
         CALL MPI_SEND(BUF,LEN,MPI_DOUBLE_PRECISION,IT_SPMD(PMAIN),
-     .                MSGTYP,MPI_COMM_WORLD,IERROR)
+     .                MSGTYP,COMM_RADIOSS,IERROR)
         LEN=NRBYKIN*A_AR
         CALL MPI_BCAST(RBF6,LEN,MPI_DOUBLE_PRECISION,IT_SPMD(PMAIN),
-     .                 MPI_COMM_WORLD,IERROR)
+     .                 COMM_RADIOSS,IERROR)
 C
       END IF
 C

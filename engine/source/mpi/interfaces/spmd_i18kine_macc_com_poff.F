@@ -44,6 +44,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -85,7 +86,7 @@ C Preparation du recv
           MSGTYP = MSGOFF 
           CALL MPI_IRECV(
      S      BBUFR(L),SIZ,REAL,IT_SPMD(P),MSGTYP,
-     G      MPI_COMM_WORLD,REQ_RI(P),IERROR)
+     G      COMM_RADIOSS,REQ_RI(P),IERROR)
             L = L + SIZ
         ENDIF
       END DO
@@ -114,7 +115,7 @@ C Preparation du recv
           L=IADS(P)
           CALL MPI_ISEND(
      S        BBUFS(L),SIZ,REAL,IT_SPMD(P),MSGTYP,
-     G        MPI_COMM_WORLD,REQ_SI(P),IERROR)
+     G        COMM_RADIOSS,REQ_SI(P),IERROR)
         ENDIF
       ENDDO
 C--------------------------------------------------------------------

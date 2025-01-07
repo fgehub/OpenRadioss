@@ -40,6 +40,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   D u m m y   A r g u m e n t s
@@ -69,7 +70,7 @@ C-----------------------------------------------
 
 !       ------------------
 !       mpi comm allreduce
-        CALL MPI_ALLREDUCE(VALUE,RES,MY_SIZE,MPI_DOUBLE_PRECISION,MPI_OPERATION,MPI_COMM_WORLD,error)
+        CALL MPI_ALLREDUCE(VALUE,RES,MY_SIZE,MPI_DOUBLE_PRECISION,MPI_OPERATION,COMM_RADIOSS,error)
 !       ------------------
 #else
         RES = 0
@@ -96,6 +97,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   D u m m y   A r g u m e n t s
@@ -125,7 +127,7 @@ C-----------------------------------------------
 
 !       ------------------
 !       mpi comm allreduce
-        CALL MPI_ALLREDUCE(VALUE,RES,MY_SIZE,MPI_INTEGER,MPI_OPERATION,MPI_COMM_WORLD,error)
+        CALL MPI_ALLREDUCE(VALUE,RES,MY_SIZE,MPI_INTEGER,MPI_OPERATION,COMM_RADIOSS,error)
 !       ------------------
 #else
         RES = 0

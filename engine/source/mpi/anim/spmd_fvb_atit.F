@@ -43,6 +43,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -82,7 +83,7 @@ C
             ELSE
                ITAG=MSGOFF
                CALL MPI_RECV(NPOLH_ANIM, 1, MPI_INTEGER,
-     .                       IT_SPMD(PMAIN), ITAG, MPI_COMM_WORLD,
+     .                       IT_SPMD(PMAIN), ITAG, COMM_RADIOSS,
      .                       STAT, IERR)
                DO J=1,NPOLH_ANIM
                   WRITE(STR,'(I8,A1)') J+MAXPART,':'
@@ -102,7 +103,7 @@ C
             IF (ISPMD==PMAIN-1) THEN
                ITAG=MSGOFF
                CALL MPI_SEND(FVDATA(I)%NPOLH_ANIM, 1, MPI_INTEGER,
-     .                       IT_SPMD(1), ITAG, MPI_COMM_WORLD,
+     .                       IT_SPMD(1), ITAG, COMM_RADIOSS,
      .                       IERR)
             ENDIF
          ENDIF

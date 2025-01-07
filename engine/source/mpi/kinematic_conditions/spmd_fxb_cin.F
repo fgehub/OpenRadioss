@@ -36,6 +36,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -79,14 +80,14 @@ C
                II=II+1
                ITAG=MSGOFF
                CALL MPI_ISEND(BUF, LEN, REAL, IT_SPMD(I), ITAG,
-     .                        MPI_COMM_WORLD, REQ(II), IERR)
+     .                        COMM_RADIOSS, REQ(II), IERR)
             ENDDO
 C
             CALL MPI_WAITALL(NSPMD-1, REQ, STAT, IERR)
          ELSE
             ITAG=MSGOFF
             CALL MPI_IRECV(BUF, LEN, REAL, IT_SPMD(PMAIN+1), ITAG,
-     .                     MPI_COMM_WORLD, REQ(1), IERR)
+     .                     COMM_RADIOSS, REQ(1), IERR)
 C
             CALL MPI_WAIT(REQ, STAT, IERR)
             DO I=1,NME+NMOD

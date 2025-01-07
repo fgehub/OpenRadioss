@@ -113,7 +113,7 @@
         integer, parameter :: SPMD_PROD = 4
 
 #ifndef MPI
-        integer, parameter :: MPI_COMM_WORLD = 0
+        integer, parameter :: COMM_RADIOSS = 0
         integer, parameter :: MPI_STATUS_IGNORE = 0
         integer, parameter :: MPI_STATUS_SIZE = 1
 #endif
@@ -244,6 +244,7 @@
 ! ----------------------------------------------------------------------------------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 ! ----------------------------------------------------------------------------------------------------------------------
 !                                                   Arguments
@@ -260,7 +261,7 @@
 #ifdef MPI
           if(ierr /= MPI_SUCCESS) then
             write(6,*) 'MPI error: ', ierr,' at ',tag
-            call MPI_Abort(MPI_COMM_WORLD, ierr,ierror)
+            call MPI_Abort(COMM_RADIOSS, ierr,ierror)
           end if
 #ifdef DEBUG_SPMD
           write(6,*) 'Exiting MPI call: ', tag
@@ -326,6 +327,7 @@
 ! ----------------------------------------------------------------------------------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 ! ----------------------------------------------------------------------------------------------------------------------
 !                                                   Arguments
@@ -358,6 +360,7 @@
 ! ----------------------------------------------------------------------------------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 ! ----------------------------------------------------------------------------------------------------------------------
 !                                                   Arguments
@@ -376,7 +379,7 @@
           if(present(comm)) then
             call MPI_Comm_rank(comm, rank, ierr)
           else
-            call MPI_Comm_rank(MPI_COMM_WORLD, rank, ierr)
+            call MPI_Comm_rank(COMM_RADIOSS, rank, ierr)
           end if
 #else
           rank = 0
@@ -403,6 +406,7 @@
 ! ----------------------------------------------------------------------------------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 ! ----------------------------------------------------------------------------------------------------------------------
 !                                                   Arguments
@@ -421,7 +425,7 @@
           if(present(comm)) then
             call MPI_Comm_size(comm, rank, ierr)
           else
-            call MPI_Comm_size(MPI_COMM_WORLD, rank, ierr)
+            call MPI_Comm_size(COMM_RADIOSS, rank, ierr)
           end if
 #else
           rank = 0
@@ -457,6 +461,7 @@
 ! ----------------------------------------------------------------------------------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 ! ----------------------------------------------------------------------------------------------------------------------
 !                                                   Arguments
@@ -506,6 +511,7 @@
           implicit none
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
           integer, optional, intent(in) :: comm
           integer :: ierr
@@ -514,7 +520,7 @@
           if(present(comm)) then
             call MPI_Barrier(comm, ierr)
           else
-            call MPI_Barrier(MPI_COMM_WORLD, ierr)
+            call MPI_Barrier(COMM_RADIOSS, ierr)
           end if
           call spmd_out(TAG_BARRIER,ierr)
 #endif
@@ -576,6 +582,7 @@
           implicit none
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
           integer, intent(in) :: request
           integer, dimension(MPI_STATUS_SIZE), optional, intent(inout) :: status
@@ -601,6 +608,7 @@
           implicit none
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
           integer, intent(in) :: buf_count, dest, tag
           integer, intent(in), optional :: comm
@@ -611,7 +619,7 @@
           if( present(comm) ) then
             call MPI_Send(buf, buf_count, MPI_REAL , dest, tag, comm, ierr)
           else
-            call MPI_Send(buf, buf_count, MPI_REAL , dest, tag, MPI_COMM_WORLD, ierr)
+            call MPI_Send(buf, buf_count, MPI_REAL , dest, tag, COMM_RADIOSS, ierr)
           end if
           call spmd_out(tag,ierr)
 #endif
@@ -627,6 +635,7 @@
           implicit none
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
           integer, intent(in) :: buf_count, dest, tag
           integer, intent(in), optional :: comm
@@ -637,7 +646,7 @@
           if( present(comm) ) then
             call MPI_Send(buf, buf_count, MPI_INTEGER , dest, tag, comm, ierr)
           else
-            call MPI_Send(buf, buf_count, MPI_INTEGER, dest, tag, MPI_COMM_WORLD, ierr)
+            call MPI_Send(buf, buf_count, MPI_INTEGER, dest, tag, COMM_RADIOSS, ierr)
           end if
           call spmd_out(tag,ierr)
 #endif
@@ -653,6 +662,7 @@
           implicit none
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
           integer, intent(in) :: buf_count, dest, tag
           integer, intent(in), optional :: comm
@@ -664,7 +674,7 @@
           if( present(comm) ) then
             call MPI_Send(buf, buf_count, MPI_DOUBLE_PRECISION, dest, tag, comm, ierr)
           else
-            call MPI_Send(buf, buf_count, MPI_DOUBLE_PRECISION, dest, tag, MPI_COMM_WORLD, ierr)
+            call MPI_Send(buf, buf_count, MPI_DOUBLE_PRECISION, dest, tag, COMM_RADIOSS, ierr)
           end if
           call spmd_out(tag,ierr)
 #endif
@@ -680,6 +690,7 @@
           implicit none
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
           integer, intent(in) :: buf_count, source, tag
           real, dimension(buf_count), intent(inout) :: buf
@@ -690,7 +701,7 @@
           if (present(comm)) then
             call MPI_Recv(buf, buf_count, MPI_REAL, source, tag, comm, MPI_STATUS_IGNORE, ierr)
           else
-            call MPI_Recv(buf, buf_count, MPI_REAL, source, tag, MPI_COMM_WORLD, MPI_STATUS_IGNORE, ierr)
+            call MPI_Recv(buf, buf_count, MPI_REAL, source, tag, COMM_RADIOSS, MPI_STATUS_IGNORE, ierr)
           endif
           call spmd_out(tag,ierr)
 #endif
@@ -706,6 +717,7 @@
           implicit none
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
           integer, intent(in) :: buf_count, source, tag
           real, dimension(buf_count,1), intent(inout) :: buf
@@ -716,7 +728,7 @@
           if (present(comm)) then
             call MPI_Recv(buf, buf_count, MPI_REAL, source, tag, comm, MPI_STATUS_IGNORE, ierr)
           else
-            call MPI_Recv(buf, buf_count, MPI_REAL, source, tag, MPI_COMM_WORLD, MPI_STATUS_IGNORE, ierr)
+            call MPI_Recv(buf, buf_count, MPI_REAL, source, tag, COMM_RADIOSS, MPI_STATUS_IGNORE, ierr)
           endif
           call spmd_out(tag,ierr)
 #endif
@@ -733,6 +745,7 @@
           implicit none
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
           integer, intent(in) :: buf_count, source, tag
           integer, dimension(buf_count), intent(inout) :: buf
@@ -743,7 +756,7 @@
           if (present(comm)) then
             call MPI_Recv(buf, buf_count, MPI_INT, source, tag, comm, MPI_STATUS_IGNORE, ierr)
           else
-            call MPI_Recv(buf, buf_count, MPI_INT, source, tag, MPI_COMM_WORLD, MPI_STATUS_IGNORE, ierr)
+            call MPI_Recv(buf, buf_count, MPI_INT, source, tag, COMM_RADIOSS, MPI_STATUS_IGNORE, ierr)
           endif
 #endif
           call spmd_out(tag,ierr)
@@ -759,6 +772,7 @@
           implicit none
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
           integer, intent(in) :: buf_count, source, tag
           double precision, dimension(buf_count), intent(inout) :: buf
@@ -769,7 +783,7 @@
           if (present(comm)) then
             call MPI_Recv(buf, buf_count, MPI_DOUBLE_PRECISION, source, tag, comm, MPI_STATUS_IGNORE, ierr)
           else
-            call MPI_Recv(buf, buf_count, MPI_DOUBLE_PRECISION, source, tag, MPI_COMM_WORLD, MPI_STATUS_IGNORE, ierr)
+            call MPI_Recv(buf, buf_count, MPI_DOUBLE_PRECISION, source, tag, COMM_RADIOSS, MPI_STATUS_IGNORE, ierr)
           endif
           call spmd_out(tag,ierr)
 #endif
@@ -785,6 +799,7 @@
           implicit none
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
           integer, intent(in) :: buf_count, source, tag
           double precision, dimension(buf_count,1), intent(inout) :: buf
@@ -795,7 +810,7 @@
           if (present(comm)) then
             call MPI_Recv(buf, buf_count, MPI_DOUBLE_PRECISION, source, tag, comm, MPI_STATUS_IGNORE, ierr)
           else
-            call MPI_Recv(buf, buf_count, MPI_DOUBLE_PRECISION, source, tag, MPI_COMM_WORLD, MPI_STATUS_IGNORE, ierr)
+            call MPI_Recv(buf, buf_count, MPI_DOUBLE_PRECISION, source, tag, COMM_RADIOSS, MPI_STATUS_IGNORE, ierr)
           endif
           call spmd_out(tag,ierr)
 #endif
@@ -812,6 +827,7 @@
           implicit none
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
           integer, intent(in) :: buf_count, dest, tag
           real, dimension(buf_count), intent(in) :: buf
@@ -823,7 +839,7 @@
           if (present(comm)) then
             call MPI_Isend(buf, buf_count, MPI_REAL, dest, tag, comm, request, ierr)
           else
-            call MPI_Isend(buf, buf_count, MPI_REAL, dest, tag, MPI_COMM_WORLD, request, ierr)
+            call MPI_Isend(buf, buf_count, MPI_REAL, dest, tag, COMM_RADIOSS, request, ierr)
           endif
           call spmd_out(tag,ierr)
 #endif
@@ -839,6 +855,7 @@
           implicit none
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
           integer, intent(in) :: buf_count, dest, tag
           integer, dimension(buf_count), intent(in) :: buf
@@ -850,7 +867,7 @@
           if (present(comm)) then
             call MPI_Isend(buf, buf_count, MPI_INT, dest, tag, comm, request, ierr)
           else
-            call MPI_Isend(buf, buf_count, MPI_INT, dest, tag, MPI_COMM_WORLD, request, ierr)
+            call MPI_Isend(buf, buf_count, MPI_INT, dest, tag, COMM_RADIOSS, request, ierr)
           endif
           call spmd_out(tag,ierr)
 #endif
@@ -866,6 +883,7 @@
           implicit none
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
           integer, intent(in) :: buf_count, dest, tag
           double precision, dimension(buf_count), intent(in) :: buf
@@ -877,7 +895,7 @@
           if (present(comm)) then
             call MPI_Isend(buf, buf_count, MPI_DOUBLE_PRECISION, dest, tag, comm, request, ierr)
           else
-            call MPI_Isend(buf, buf_count, MPI_DOUBLE_PRECISION, dest, tag, MPI_COMM_WORLD, request, ierr)
+            call MPI_Isend(buf, buf_count, MPI_DOUBLE_PRECISION, dest, tag, COMM_RADIOSS, request, ierr)
           endif
           call spmd_out(tag,ierr)
 #endif
@@ -893,6 +911,7 @@
           implicit none
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
           integer, intent(in) :: buf_count, source, tag
           real, dimension(buf_count), intent(inout) :: buf
@@ -904,7 +923,7 @@
           if (present(comm)) then
             call MPI_Irecv(buf, buf_count, MPI_REAL, source, tag, comm, request, ierr)
           else
-            call MPI_Irecv(buf, buf_count, MPI_REAL, source, tag, MPI_COMM_WORLD, request, ierr)
+            call MPI_Irecv(buf, buf_count, MPI_REAL, source, tag, COMM_RADIOSS, request, ierr)
           endif
           call spmd_out(tag,ierr)
 #endif
@@ -920,6 +939,7 @@
           implicit none
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
           integer, intent(in) :: buf_count, source, tag
           integer, dimension(buf_count), intent(inout) :: buf
@@ -931,7 +951,7 @@
           if (present(comm)) then
             call MPI_Irecv(buf, buf_count, MPI_INT, source, tag, comm, request, ierr)
           else
-            call MPI_Irecv(buf, buf_count, MPI_INT, source, tag, MPI_COMM_WORLD, request, ierr)
+            call MPI_Irecv(buf, buf_count, MPI_INT, source, tag, COMM_RADIOSS, request, ierr)
           endif
           call spmd_out(tag,ierr)
 #endif
@@ -947,6 +967,7 @@
           implicit none
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
           integer, intent(in) :: buf_count, source, tag
           double precision, dimension(buf_count), intent(inout) :: buf
@@ -958,7 +979,7 @@
           if (present(comm)) then
             call MPI_Irecv(buf, buf_count, MPI_DOUBLE_PRECISION, source, tag, comm, request, ierr)
           else
-            call MPI_Irecv(buf, buf_count, MPI_DOUBLE_PRECISION, source, tag, MPI_COMM_WORLD, request, ierr)
+            call MPI_Irecv(buf, buf_count, MPI_DOUBLE_PRECISION, source, tag, COMM_RADIOSS, request, ierr)
           endif
           call spmd_out(tag,ierr)
 #endif
@@ -995,6 +1016,7 @@
           implicit none
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
           integer, intent(in) :: buf_count
           integer, dimension(buf_count), intent(inout) :: array_of_requests
@@ -1024,6 +1046,7 @@
           implicit none
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
           integer, intent(in) :: buf_count
           integer, dimension(buf_count), intent(inout) :: array_of_requests
@@ -1050,6 +1073,7 @@
           implicit none
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
           integer, intent(in) :: source, tag
           integer, intent(in), optional :: comm
@@ -1060,7 +1084,7 @@
           if (present(comm)) then
             call MPI_Probe(source, tag, comm, status, ierr)
           else
-            call MPI_Probe(source, tag, MPI_COMM_WORLD, status, ierr)
+            call MPI_Probe(source, tag, COMM_RADIOSS, status, ierr)
           endif
           call spmd_out(tag,ierr)
 #endif
@@ -1077,6 +1101,7 @@
           implicit none
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
           real, intent(in) :: sendbuf(*)
           real, intent(inout) :: recvbuf(*)
@@ -1091,7 +1116,7 @@
           if (present(comm)) then
             used_comm = comm
           else
-            used_comm = MPI_COMM_WORLD
+            used_comm = COMM_RADIOSS
           endif
 
           call MPI_Reduce(sendbuf, recvbuf, buf_count, MPI_REAL, mpi_op, root, used_comm, ierr)
@@ -1110,6 +1135,7 @@
           implicit none
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
           integer, intent(in) :: sendbuf(*)
           integer, intent(inout) :: recvbuf(*)
@@ -1124,7 +1150,7 @@
           if (present(comm)) then
             used_comm = comm
           else
-            used_comm = MPI_COMM_WORLD
+            used_comm = COMM_RADIOSS
           endif
 
           call MPI_Reduce(sendbuf, recvbuf, buf_count, MPI_REAL, mpi_op, root, used_comm, ierr)
@@ -1143,6 +1169,7 @@
           implicit none
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
           double precision, intent(in) :: sendbuf(*)
           double precision, intent(inout) :: recvbuf(*)
@@ -1157,7 +1184,7 @@
           if (present(comm)) then
             used_comm = comm
           else
-            used_comm = MPI_COMM_WORLD
+            used_comm = COMM_RADIOSS
           endif
 
           call MPI_Reduce(sendbuf, recvbuf, buf_count, MPI_REAL, mpi_op, root, used_comm, ierr)
@@ -1179,6 +1206,7 @@
           implicit none
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
           integer, intent(in) :: sendbuf(*)
           integer, intent(inout) :: recvbuf(*)
@@ -1193,7 +1221,7 @@
           if (present(comm)) then
             used_comm = comm
           else
-            used_comm = MPI_COMM_WORLD
+            used_comm = COMM_RADIOSS
           endif
 
           call MPI_Allreduce(sendbuf, recvbuf, buf_count, MPI_INTEGER, mpi_op, used_comm, ierr)
@@ -1215,6 +1243,7 @@
           implicit none
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
           double precision, intent(in) :: sendbuf(*)
           double precision, intent(inout) :: recvbuf(*)
@@ -1229,7 +1258,7 @@
           if (present(comm)) then
             used_comm = comm
           else
-            used_comm = MPI_COMM_WORLD
+            used_comm = COMM_RADIOSS
           endif
 
           call MPI_Allreduce(sendbuf, recvbuf, buf_count, MPI_DOUBLE_PRECISION, mpi_op, used_comm, ierr)
@@ -1251,6 +1280,7 @@
           implicit none
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
           real, intent(in) :: sendbuf(*)
           real, intent(inout) :: recvbuf(*)
@@ -1265,7 +1295,7 @@
           if (present(comm)) then
             used_comm = comm
           else
-            used_comm = MPI_COMM_WORLD
+            used_comm = COMM_RADIOSS
           endif
 
           call MPI_Allreduce(sendbuf, recvbuf, buf_count, MPI_REAL, mpi_op, used_comm, ierr)
@@ -1285,6 +1315,7 @@
           implicit none
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
           integer, intent(in) :: buf_count, dest, tag
           integer, intent(in), optional :: comm
@@ -1295,7 +1326,7 @@
           if( present(comm) ) then
             call MPI_Send(buf, buf_count, MPI_INTEGER , dest, tag, comm, ierr)
           else
-            call MPI_Send(buf, buf_count, MPI_INTEGER, dest, tag, MPI_COMM_WORLD, ierr)
+            call MPI_Send(buf, buf_count, MPI_INTEGER, dest, tag, COMM_RADIOSS, ierr)
           end if
           call spmd_out(tag,ierr)
 #endif
@@ -1311,6 +1342,7 @@
           implicit none
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
           integer, intent(in) :: buf_count, dest, tag
           integer, intent(in), optional :: comm
@@ -1322,7 +1354,7 @@
           if( present(comm) ) then
             call MPI_Send(buf, buf_count, MPI_DOUBLE_PRECISION, dest, tag, comm, ierr)
           else
-            call MPI_Send(buf, buf_count, MPI_DOUBLE_PRECISION, dest, tag, MPI_COMM_WORLD, ierr)
+            call MPI_Send(buf, buf_count, MPI_DOUBLE_PRECISION, dest, tag, COMM_RADIOSS, ierr)
           end if
           call spmd_out(tag,ierr)
 #endif
@@ -1338,6 +1370,7 @@
           implicit none
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
           integer, intent(in) :: buf_count, dest, tag
           integer, intent(in), optional :: comm
@@ -1348,7 +1381,7 @@
           if( present(comm) ) then
             call MPI_Send(buf, buf_count, MPI_REAL , dest, tag, comm, ierr)
           else
-            call MPI_Send(buf, buf_count, MPI_REAL , dest, tag, MPI_COMM_WORLD, ierr)
+            call MPI_Send(buf, buf_count, MPI_REAL , dest, tag, COMM_RADIOSS, ierr)
           end if
           call spmd_out(tag,ierr)
 #endif
@@ -1364,6 +1397,7 @@
           implicit none
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
           real,  intent(inout) :: buf
           integer, intent(in) :: buf_count, source, tag
@@ -1374,7 +1408,7 @@
           if (present(comm)) then
             call MPI_Recv(buf, buf_count, MPI_REAL, source, tag, comm, MPI_STATUS_IGNORE, ierr)
           else
-            call MPI_Recv(buf, buf_count, MPI_REAL, source, tag, MPI_COMM_WORLD, MPI_STATUS_IGNORE, ierr)
+            call MPI_Recv(buf, buf_count, MPI_REAL, source, tag, COMM_RADIOSS, MPI_STATUS_IGNORE, ierr)
           endif
           call spmd_out(tag,ierr)
 #endif
@@ -1390,6 +1424,7 @@
           implicit none
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
           integer, intent(inout) :: buf
           integer, intent(in) :: buf_count, source, tag
@@ -1400,7 +1435,7 @@
           if (present(comm)) then
             call MPI_Recv(buf, buf_count, MPI_INT, source, tag, comm, MPI_STATUS_IGNORE, ierr)
           else
-            call MPI_Recv(buf, buf_count, MPI_INT, source, tag, MPI_COMM_WORLD, MPI_STATUS_IGNORE, ierr)
+            call MPI_Recv(buf, buf_count, MPI_INT, source, tag, COMM_RADIOSS, MPI_STATUS_IGNORE, ierr)
           endif
           call spmd_out(tag,ierr)
 #endif
@@ -1416,6 +1451,7 @@
           implicit none
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
           double precision, intent(inout) :: buf
           integer, intent(in) :: buf_count, source, tag
@@ -1426,7 +1462,7 @@
           if (present(comm)) then
             call MPI_Recv(buf, buf_count, MPI_DOUBLE_PRECISION, source, tag, comm, MPI_STATUS_IGNORE, ierr)
           else
-            call MPI_Recv(buf, buf_count, MPI_DOUBLE_PRECISION, source, tag, MPI_COMM_WORLD, MPI_STATUS_IGNORE, ierr)
+            call MPI_Recv(buf, buf_count, MPI_DOUBLE_PRECISION, source, tag, COMM_RADIOSS, MPI_STATUS_IGNORE, ierr)
           endif
           call spmd_out(tag,ierr)
 #endif
@@ -1442,6 +1478,7 @@
           implicit none
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
           real,  intent(in) :: buf
           integer, intent(in) :: buf_count, dest, tag
@@ -1453,7 +1490,7 @@
           if (present(comm)) then
             call MPI_Isend(buf, buf_count, MPI_REAL, dest, tag, comm, request, ierr)
           else
-            call MPI_Isend(buf, buf_count, MPI_REAL, dest, tag, MPI_COMM_WORLD, request, ierr)
+            call MPI_Isend(buf, buf_count, MPI_REAL, dest, tag, COMM_RADIOSS, request, ierr)
           endif
           call spmd_out(tag,ierr)
 #endif
@@ -1469,6 +1506,7 @@
           implicit none
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
           integer, intent(in) :: buf_count, dest, tag
           integer, intent(in) :: buf
@@ -1480,7 +1518,7 @@
           if (present(comm)) then
             call MPI_Isend(buf, buf_count, MPI_INT, dest, tag, comm, request, ierr)
           else
-            call MPI_Isend(buf, buf_count, MPI_INT, dest, tag, MPI_COMM_WORLD, request, ierr)
+            call MPI_Isend(buf, buf_count, MPI_INT, dest, tag, COMM_RADIOSS, request, ierr)
           endif
           call spmd_out(tag,ierr)
 #endif
@@ -1496,6 +1534,7 @@
           implicit none
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
           integer, intent(in) :: buf_count, dest, tag
           double precision, intent(in) :: buf
@@ -1507,7 +1546,7 @@
           if (present(comm)) then
             call MPI_Isend(buf, buf_count, MPI_DOUBLE_PRECISION, dest, tag, comm, request, ierr)
           else
-            call MPI_Isend(buf, buf_count, MPI_DOUBLE_PRECISION, dest, tag, MPI_COMM_WORLD, request, ierr)
+            call MPI_Isend(buf, buf_count, MPI_DOUBLE_PRECISION, dest, tag, COMM_RADIOSS, request, ierr)
           endif
           call spmd_out(tag,ierr)
 #endif
@@ -1523,6 +1562,7 @@
           implicit none
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
           integer, intent(in) :: buf_count, source, tag
           real,    intent(inout) :: buf
@@ -1534,7 +1574,7 @@
           if (present(comm)) then
             call MPI_Irecv(buf, buf_count, MPI_REAL, source, tag, comm, request, ierr)
           else
-            call MPI_Irecv(buf, buf_count, MPI_REAL, source, tag, MPI_COMM_WORLD, request, ierr)
+            call MPI_Irecv(buf, buf_count, MPI_REAL, source, tag, COMM_RADIOSS, request, ierr)
           endif
           call spmd_out(tag,ierr)
 #endif
@@ -1550,6 +1590,7 @@
           implicit none
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
           integer, intent(inout) :: buf
           integer, intent(in) :: buf_count, source, tag
@@ -1561,7 +1602,7 @@
           if (present(comm)) then
             call MPI_Irecv(buf, buf_count, MPI_INT, source, tag, comm, request, ierr)
           else
-            call MPI_Irecv(buf, buf_count, MPI_INT, source, tag, MPI_COMM_WORLD, request, ierr)
+            call MPI_Irecv(buf, buf_count, MPI_INT, source, tag, COMM_RADIOSS, request, ierr)
           endif
           call spmd_out(tag,ierr)
 #endif
@@ -1577,6 +1618,7 @@
           implicit none
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
           double precision, intent(inout) :: buf
           integer, intent(in) :: buf_count, source, tag
@@ -1588,7 +1630,7 @@
           if (present(comm)) then
             call MPI_Irecv(buf, buf_count, MPI_DOUBLE_PRECISION, source, tag, comm, request, ierr)
           else
-            call MPI_Irecv(buf, buf_count, MPI_DOUBLE_PRECISION, source, tag, MPI_COMM_WORLD, request, ierr)
+            call MPI_Irecv(buf, buf_count, MPI_DOUBLE_PRECISION, source, tag, COMM_RADIOSS, request, ierr)
           endif
           call spmd_out(tag,ierr)
 #endif
@@ -1605,6 +1647,7 @@
           implicit none
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
           real, intent(in) :: sendbuf
           real, intent(inout) :: recvbuf
@@ -1620,7 +1663,7 @@
           if (present(comm)) then
             used_comm = comm
           else
-            used_comm = MPI_COMM_WORLD
+            used_comm = COMM_RADIOSS
           endif
 
           call MPI_Reduce(sendbuf, recvbuf, buf_count, MPI_REAL, mpi_op, root, used_comm, ierr)
@@ -1639,6 +1682,7 @@
           implicit none
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
           integer, intent(in) :: sendbuf
           integer, intent(inout) :: recvbuf
@@ -1653,7 +1697,7 @@
           if (present(comm)) then
             used_comm = comm
           else
-            used_comm = MPI_COMM_WORLD
+            used_comm = COMM_RADIOSS
           endif
 
           call MPI_Reduce(sendbuf, recvbuf, buf_count, MPI_REAL, mpi_op, root, used_comm, ierr)
@@ -1672,6 +1716,7 @@
           implicit none
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
           double precision, intent(in) :: sendbuf
           double precision, intent(inout) :: recvbuf
@@ -1686,7 +1731,7 @@
           if (present(comm)) then
             used_comm = comm
           else
-            used_comm = MPI_COMM_WORLD
+            used_comm = COMM_RADIOSS
           endif
 
           call MPI_Reduce(sendbuf, recvbuf, buf_count, MPI_REAL, mpi_op, root, used_comm, ierr)
@@ -1705,6 +1750,7 @@
           implicit none
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
           integer, intent(in) :: sendbuf
           integer, intent(inout) :: recvbuf
@@ -1719,7 +1765,7 @@
           if (present(comm)) then
             used_comm = comm
           else
-            used_comm = MPI_COMM_WORLD
+            used_comm = COMM_RADIOSS
           endif
 
           call MPI_Allreduce(sendbuf, recvbuf, buf_count, MPI_INTEGER, mpi_op, used_comm, ierr)
@@ -1738,6 +1784,7 @@
           implicit none
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
           double precision, intent(in) :: sendbuf
           double precision, intent(inout) :: recvbuf
@@ -1752,7 +1799,7 @@
           if (present(comm)) then
             used_comm = comm
           else
-            used_comm = MPI_COMM_WORLD
+            used_comm = COMM_RADIOSS
           endif
 
           call MPI_Allreduce(sendbuf, recvbuf, buf_count, MPI_DOUBLE_PRECISION, mpi_op, used_comm, ierr)
@@ -1771,6 +1818,7 @@
           implicit none
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
           real, intent(in) :: sendbuf
           real, intent(inout) :: recvbuf
@@ -1785,7 +1833,7 @@
           if (present(comm)) then
             used_comm = comm
           else
-            used_comm = MPI_COMM_WORLD
+            used_comm = COMM_RADIOSS
           endif
 
           call MPI_Allreduce(sendbuf, recvbuf, buf_count, MPI_DOUBLE_PRECISION, mpi_op, used_comm, ierr)

@@ -36,6 +36,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -60,7 +61,7 @@ C
          DO I=1,NSPMD-1
             ITAG=MSGOFF
             CALL MPI_IRECV(IDCMAXP(I), 1, MPI_INTEGER, IT_SPMD(I+1),
-     .                     ITAG, MPI_COMM_WORLD, REQ(I), IERR)
+     .                     ITAG, COMM_RADIOSS, REQ(I), IERR)
          ENDDO
          CALL MPI_WAITALL(NSPMD-1, REQ, STAT, IERR)
 C         
@@ -71,7 +72,7 @@ C
       ELSE
          ITAG=MSGOFF
          CALL MPI_ISEND(IDCMAXL, 1, MPI_INTEGER, IT_SPMD(1),
-     .                  ITAG, MPI_COMM_WORLD, REQ, IERR)
+     .                  ITAG, COMM_RADIOSS, REQ, IERR)
          CALL MPI_WAIT(REQ, STAT, IERR)
       ENDIF
 C

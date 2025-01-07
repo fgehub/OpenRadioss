@@ -56,6 +56,7 @@ C-----------------------------------------------
 
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 
 C-----------------------------------------------
@@ -87,7 +88,7 @@ C-----------------------------------------------
         MSGTYP= MSGOFF
 
         CALL MPI_SEND(NP,NBF_L,MPI_INTEGER,IT_SPMD(1),MSGTYP,
-     .                MPI_COMM_WORLD,ierror)
+     .                COMM_RADIOSS,ierror)
 
       ELSE
         DO K=1,NBF_L
@@ -101,11 +102,11 @@ C
         MSGTYP= MSGOFF
 
          CALL MPI_PROBE(IT_SPMD(K),MSGTYP,
-     .                   MPI_COMM_WORLD,STATUS,ierror)
+     .                   COMM_RADIOSS,STATUS,ierror)
          CALL MPI_GET_COUNT(STATUS,MPI_INTEGER,NB_TMP,ierror)
 
          CALL MPI_RECV(RBUF(IDEB),NB_TMP,MPI_INTEGER,IT_SPMD(K),MSGTYP,
-     .                  MPI_COMM_WORLD,STATUS,ierror)
+     .                  COMM_RADIOSS,STATUS,ierror)
 
         IDEB = IDEB + NB_TMP
         END DO

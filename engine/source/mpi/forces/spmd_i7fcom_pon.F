@@ -92,6 +92,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -215,7 +216,7 @@ C ajout partie egde pour type 20
               MSGTYP = MSGOFF 
               CALL MPI_IRECV(
      .          ISIZRCV(1,P),2,MPI_INTEGER,IT_SPMD(P),MSGTYP,
-     .          MPI_COMM_WORLD,REQ_R(P),IERROR   )
+     .          COMM_RADIOSS,REQ_R(P),IERROR   )
             ENDIF
           ENDIF
         ENDDO
@@ -398,7 +399,7 @@ C
             MSGTYP = MSGOFF
              CALL MPI_ISEND(
      .        ISIZENV(1,P),2,MPI_INTEGER,IT_SPMD(P),MSGTYP,
-     .        MPI_COMM_WORLD,REQ_S(P),IERROR    )
+     .        COMM_RADIOSS,REQ_S(P),IERROR    )
             IALLOCS = IALLOCS + ISIZENV(1,P)
           ENDIF
         END DO
@@ -1096,7 +1097,7 @@ C Node generating the force
             MSGTYP = MSGOFF2
             CALL MPI_ISEND(
      .        BBUFS(ADD),SIZ,REAL     ,IT_SPMD(P),MSGTYP,
-     .        MPI_COMM_WORLD,REQ_SI(P),IERROR    )
+     .        COMM_RADIOSS,REQ_SI(P),IERROR    )
           ELSEIF(P/=LOC_PROC)THEN
             DO II = 1, NBINTC
               NIN = INTLIST(II)
@@ -1171,7 +1172,7 @@ C        L = 1       ! a reactiver si envoi non bloquant
             L = 1           ! envoi bloquant + opti alloc memoire sur max des comm
             CALL MPI_RECV(
      .        BBUFR(L),ISIZRCV(1,P)+NBINTC*2,REAL  ,IT_SPMD(P),MSGTYP,
-     .        MPI_COMM_WORLD            ,STATUS,IERROR    )
+     .        COMM_RADIOSS            ,STATUS,IERROR    )
              
 C
             DO II = 1, NBINTC

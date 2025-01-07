@@ -308,6 +308,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   D u m m y   A r g u m e n t s
@@ -398,7 +399,7 @@ C All processes: write local stiffness coefficients (at MPI domain level) in Mat
       ENDIF   
       CLOSE(UNIT=OFFST+ISPMD)           
 #ifdef MPI
-      CALL MPI_BARRIER(MPI_COMM_WORLD,IERROR)
+      CALL MPI_BARRIER(COMM_RADIOSS,IERROR)
 #endif
 C Process 0: read stiff. coeff. from all processes, sort (bubble) and write stiffness coefficients in MatrixMarket format         
       IF (ISPMD == 0) THEN

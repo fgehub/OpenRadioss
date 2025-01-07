@@ -43,6 +43,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -113,11 +114,11 @@ C Les plynods des autres procs
               ITAG=MSGOFF
 
               CALL MPI_RECV(IRECBUF,PLYIADNOD(IPLY,P), MPI_INTEGER,
-     .                      IT_SPMD(P),ITAG, MPI_COMM_WORLD, STAT, IERR)
+     .                      IT_SPMD(P),ITAG, COMM_RADIOSS, STAT, IERR)
 
               ITAG=MSGOFF2
               CALL MPI_RECV(FRECBUF,PLYIADNOD(IPLY,P)*3, MPI_INTEGER,
-     .                      IT_SPMD(P),ITAG, MPI_COMM_WORLD, STAT, IERR)
+     .                      IT_SPMD(P),ITAG, COMM_RADIOSS, STAT, IERR)
 
               DO I=1,PLYIADNOD(IPLY,P)
                  EMPL = IRECBUF(I)-EMPSIZPL
@@ -161,11 +162,11 @@ C Les plynods des autres procs
 
         ITAG=MSGOFF
         CALL MPI_SEND(ISENDBUF,PLYSIZ,MPI_INTEGER,IT_SPMD(1),
-     .                   ITAG,MPI_COMM_WORLD,IERR)
+     .                   ITAG,COMM_RADIOSS,IERR)
 
         ITAG=MSGOFF2
         CALL MPI_SEND(FSENDBUF,PLYSIZ*3,MPI_INTEGER,IT_SPMD(1),
-     .                   ITAG,MPI_COMM_WORLD,IERR)
+     .                   ITAG,COMM_RADIOSS,IERR)
 C
         DEALLOCATE(ISENDBUF,FSENDBUF)
       ENDIF

@@ -36,6 +36,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -131,7 +132,7 @@ C-----------------------------------------------
         TOTAL_RECV = TOTAL_RECV / 10              
 
 !       comm        
-        CALL MPI_ALLGATHERV(SBUF,SENDCOUNT,REAL,RBUF,RECVCOUNT,DIPSPL,REAL,MPI_COMM_WORLD,IERROR)
+        CALL MPI_ALLGATHERV(SBUF,SENDCOUNT,REAL,RBUF,RECVCOUNT,DIPSPL,REAL,COMM_RADIOSS,IERROR)
                 
 !       fill the SKEW array 
         DO I=1,TOTAL_RECV
@@ -167,6 +168,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -259,7 +261,7 @@ C-----------------------------------------------
         TOTAL_RECV = TOTAL_RECV / 10              
 
 !       comm on proc 0 (main)       
-        CALL MPI_GATHERV(SBUF,SENDCOUNT,REAL,RBUF,RECVCOUNT,DIPSPL,REAL,0,MPI_COMM_WORLD,IERROR)
+        CALL MPI_GATHERV(SBUF,SENDCOUNT,REAL,RBUF,RECVCOUNT,DIPSPL,REAL,0,COMM_RADIOSS,IERROR)
                 
 !       fill the RBUF array (only main proc)
         IF(ISPMD==0) THEN

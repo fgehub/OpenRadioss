@@ -42,6 +42,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -84,7 +85,7 @@ C
           INDEXR(NBIRECV) = I
           CALL MPI_IRECV(
      S      RBUF(L),SIZ,REAL,IT_SPMD(I),MSGTYP,
-     G      MPI_COMM_WORLD,REQ_R(NBIRECV),IERROR)
+     G      COMM_RADIOSS,REQ_R(NBIRECV),IERROR)
           L = L + SIZ
         ENDIF
         IAD_RECV(I+1) = L
@@ -121,7 +122,7 @@ C
         MSGTYP = MSGOFF 
         CALL MPI_ISEND(
      S      SBUF(L),SIZ,REAL,IT_SPMD(I),MSGTYP,
-     G      MPI_COMM_WORLD,REQ_S(II),IERROR)
+     G      COMM_RADIOSS,REQ_S(II),IERROR)
         L = L + SIZ
       ENDDO
 C

@@ -48,6 +48,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -158,7 +159,7 @@ C     sizes of send buffers
 
       CALL MPI_ALLTOALL(SIZ_SEND_BUF, NINTER, MPI_INTEGER,
      .                  SIZ_RECV_BUF, NINTER, MPI_INTEGER,
-     .                  MPI_COMM_WORLD,IERROR)
+     .                  COMM_RADIOSS,IERROR)
 
 C     allocation of buffers
       DO NIN = 1,NINTER
@@ -200,17 +201,17 @@ C     sizes of send buffers
 c            WRITE(6,*) "SEND ->",P,SEND_BUF(NIN,P)%P(1:k)
              CALL MPI_ISEND(
      .       SEND_BUF(NIN,P)%P(1),K,MPI_INTEGER,IT_SPMD(P),MSGTYP,
-     .       MPI_COMM_WORLD,REQ_S(P),IERROR)
+     .       COMM_RADIOSS,REQ_S(P),IERROR)
           ENDIF
           IF(P /= ISPMD + 1 .AND. SIZ_RECV_BUF(NIN,P) > 0) THEN
              K = SIZ_RECV_BUF(NIN,P)
              CALL MPI_IRECV(
      .       RECV_BUF(NIN,P)%P(1),K,MPI_INTEGER,IT_SPMD(P),MSGTYP,
-     .       MPI_COMM_WORLD,REQ_R(P),IERROR)
+     .       COMM_RADIOSS,REQ_R(P),IERROR)
           ENDIF
         ENDDO
 c       CALL FLUSH(6)
-c       CALL MPI_BARRIER(MPI_COMM_WORLD,IERR)
+c       CALL MPI_BARRIER(COMM_RADIOSS,IERR)
       
         DO P = 1,NSPMD
           IF(P /= ISPMD + 1 .AND. SIZ_SEND_BUF(NIN,P) > 0) THEN
@@ -248,13 +249,13 @@ c                WRITE(6,*) "found at ",K
              K = SIZ_RECV_BUF(NIN,P)
              CALL MPI_ISEND(
      .       RECV_BUF(NIN,P)%P(1),K,MPI_INTEGER,IT_SPMD(P),MSGTYP,
-     .       MPI_COMM_WORLD,REQ_S(P),IERROR)
+     .       COMM_RADIOSS,REQ_S(P),IERROR)
           ENDIF
           IF(P /= ISPMD + 1 .AND. SIZ_SEND_BUF(NIN,P) > 0) THEN
              K = SIZ_SEND_BUF(NIN,P)
              CALL MPI_IRECV(
      .       SEND_BUF(NIN,P)%P(1),K,MPI_INTEGER,IT_SPMD(P),MSGTYP,
-     .       MPI_COMM_WORLD,REQ_R(P),IERROR)
+     .       COMM_RADIOSS,REQ_R(P),IERROR)
           ENDIF
         ENDDO
         DO P = 1,NSPMD
@@ -338,6 +339,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -440,7 +442,7 @@ C           CALL FLUSH(6)
      .          MPI_REAL4,
      .          IT_SPMD(P),
      .          MSGTYP,
-     .          MPI_COMM_WORLD,
+     .          COMM_RADIOSS,
      .          BUFFERS(NI25)%RECV_RQ(P),
      .          IERROR)
             ENDIF
@@ -730,7 +732,7 @@ C           CALL FLUSH(6)
      .          MPI_REAL4,
      .          IT_SPMD(P),
      .          MSGTYP,
-     .          MPI_COMM_WORLD,
+     .          COMM_RADIOSS,
      .          BUFFERS(NI25)%SEND_RQ(P),
      .          IERROR)
             ENDIF

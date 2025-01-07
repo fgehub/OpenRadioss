@@ -38,6 +38,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -67,17 +68,17 @@ C-----------------------------------------------
           MSGTYP = MSGOFF
           CALL MPI_RECV(
      .      LENR,5,MPI_INTEGER,IT_SPMD(I),MSGTYP,
-     .      MPI_COMM_WORLD,STATUS,IERROR)
+     .      COMM_RADIOSS,STATUS,IERROR)
 
           MSGTYP = MSGOFF2
           CALL MPI_RECV(
      .      CBUF1,LENR(1),MPI_CHARACTER,IT_SPMD(I),MSGTYP,
-     .      MPI_COMM_WORLD,STATUS,IERROR)
+     .      COMM_RADIOSS,STATUS,IERROR)
 
           MSGTYP = MSGOFF3
           CALL MPI_RECV(
      .      CBUF2,LENR(2),MPI_CHARACTER,IT_SPMD(I),MSGTYP,
-     .      MPI_COMM_WORLD,STATUS,IERROR)
+     .      COMM_RADIOSS,STATUS,IERROR)
 
           IF (MEM>-1)THEN
            WRITE(IOUT,'(I4,A,A,A,A,A,I4,A,I6,A,I6,A)') I,'   ',
@@ -98,15 +99,15 @@ C-----------------------------------------------
 
         MSGTYP = MSGOFF
         CALL MPI_SEND(LENR,5,MPI_INTEGER,IT_SPMD(1),MSGTYP,
-     .              MPI_COMM_WORLD,ierror)
+     .              COMM_RADIOSS,ierror)
 
         MSGTYP = MSGOFF2
         CALL MPI_SEND(HOSTNAME,LENH,MPI_CHARACTER,IT_SPMD(1),MSGTYP,
-     .              MPI_COMM_WORLD,ierror)
+     .              COMM_RADIOSS,ierror)
 
         MSGTYP = MSGOFF3
         CALL MPI_SEND(CPUNAM,LENC,MPI_CHARACTER,IT_SPMD(1),MSGTYP,
-     .              MPI_COMM_WORLD,ierror)
+     .              COMM_RADIOSS,ierror)
       ENDIF
 
 #endif

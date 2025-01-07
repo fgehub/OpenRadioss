@@ -51,6 +51,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -103,7 +104,7 @@ C
               MSGTYP = MSGOFF
               CALL MPI_IRECV(
      .          ISIZRCV(1,P),2,MPI_INTEGER,IT_SPMD(P),MSGTYP,
-     .          MPI_COMM_WORLD,REQ_R(P),IERROR   )
+     .          COMM_RADIOSS,REQ_R(P),IERROR   )
             ENDIF
           ENDIF
         ENDDO
@@ -125,7 +126,7 @@ C
             MSGTYP = MSGOFF
             CALL MPI_ISEND(
      .        ISIZENV(1,P),2,MPI_INTEGER,IT_SPMD(P),MSGTYP,
-     .        MPI_COMM_WORLD,REQ_S(P),IERROR    )
+     .        COMM_RADIOSS,REQ_S(P),IERROR    )
             IALLOCS = IALLOCS + ISIZENV(1,P)
           ENDIF
         END DO
@@ -181,7 +182,7 @@ C facette element generant une force
             MSGTYP = MSGOFF2 
             CALL MPI_ISEND(
      .        BBUFS(ADD),SIZ,REAL     ,IT_SPMD(P),MSGTYP,
-     .        MPI_COMM_WORLD,REQ_SI(P),IERROR    )
+     .        COMM_RADIOSS,REQ_SI(P),IERROR    )
           ELSEIF(P/=LOC_PROC)THEN
             IDEB = IDEB + NSNFI(NIN)%P(P)
           END IF
@@ -213,7 +214,7 @@ C
             L = 1
             CALL MPI_RECV(
      .        BBUFR(L),ISIZRCV(1,P)+1,REAL  ,IT_SPMD(P),MSGTYP,
-     .        MPI_COMM_WORLD       ,STATUS,IERROR    )
+     .        COMM_RADIOSS       ,STATUS,IERROR    )
 C
             IF(NSNSI(NIN)%P(P)>0)THEN
               NB = NINT(BBUFR(L))

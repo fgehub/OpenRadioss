@@ -44,6 +44,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -121,11 +122,11 @@ C
       CALL MPI_OP_CREATE(GLOB_MIN, .TRUE., MYOP, IERROR)
       
       CALL MPI_ALLREDUCE(SBUF, RBUF, 1, MY_TYPE, MYOP,
-     &                   MPI_COMM_WORLD, IERROR)
+     &                   COMM_RADIOSS, IERROR)
      
       IF (INT24USE==1)THEN
         CALL MPI_ALLREDUCE(SBUF(11), RBUF(11), NBINTC, REAL , MPI_MAX,
-     &                   MPI_COMM_WORLD, IERROR)
+     &                   COMM_RADIOSS, IERROR)
       ENDIF
 
       CALL MPI_OP_FREE(MYOP, IERROR)

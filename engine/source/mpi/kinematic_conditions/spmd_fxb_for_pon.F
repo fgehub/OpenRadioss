@@ -38,6 +38,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -88,7 +89,7 @@ C
                II=II+1
                ITAG=MSGOFF
                CALL MPI_IRECV(NSNP(II), 1, MPI_INTEGER, IT_SPMD(I),
-     .                        ITAG, MPI_COMM_WORLD, REQ(II), IERR)
+     .                        ITAG, COMM_RADIOSS, REQ(II), IERR)
             ENDDO
             CALL MPI_WAITALL(NSPMD-1, REQ, STAT, IERR)
 C
@@ -104,7 +105,7 @@ C
                ITAG=MSGOFF
                LEN=NSNP(II)*(1+NME+NMOD)
                CALL MPI_IRECV(FSKYP(1,II), LEN, REAL, IT_SPMD(I),
-     .                        ITAG, MPI_COMM_WORLD, REQ(II), IERR)
+     .                        ITAG, COMM_RADIOSS, REQ(II), IERR)
             ENDDO
             CALL MPI_WAITALL(NSPMD-1, REQ, STAT, IERR)
 C
@@ -129,7 +130,7 @@ C
          ELSE
             ITAG=MSGOFF
             CALL MPI_ISEND(NSN, 1, MPI_INTEGER, IT_SPMD(PMAIN+1),
-     .                     ITAG, MPI_COMM_WORLD, REQ(1), IERR)
+     .                     ITAG, COMM_RADIOSS, REQ(1), IERR)
             CALL MPI_WAIT(REQ, STAT, IERR)
 C
             ALLOCATE(FSKYL(NSN,1+NME+NMOD))
@@ -141,7 +142,7 @@ C
             LEN=NSN*(1+NME+NMOD)
             ITAG=MSGOFF
             CALL MPI_ISEND(FSKYL, LEN, REAL, IT_SPMD(PMAIN+1),
-     .                     ITAG, MPI_COMM_WORLD, REQ(1), IERR)
+     .                     ITAG, COMM_RADIOSS, REQ(1), IERR)
             CALL MPI_WAIT(REQ, STAT, IERR)
 C
             DEALLOCATE(FSKYL)

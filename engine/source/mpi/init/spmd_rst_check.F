@@ -44,6 +44,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -78,13 +79,13 @@ C-----------------------------------------------
 C   ENVOI DE TT AU PROC 0
          MSGTYP = MSGOFF
          CALL MPI_SEND(TT,1,REAL,IT_SPMD(1),MSGTYP,
-     .               MPI_COMM_WORLD,ierror)
+     .               COMM_RADIOSS,ierror)
        ELSE
          DO I=2,NSPMD
 C   Check sur TT
            MSGTYP = MSGOFF
            CALL MPI_RECV(TTREC,1,REAL,IT_SPMD(I),
-     .                         MSGTYP,MPI_COMM_WORLD,STATUS,ierror)
+     .                         MSGTYP,COMM_RADIOSS,STATUS,ierror)
            IF (TTREC/=TT) THEN
 
              WRITE(RSRUN1,'(I4.4)')1

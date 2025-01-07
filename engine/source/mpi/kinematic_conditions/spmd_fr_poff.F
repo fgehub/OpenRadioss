@@ -39,6 +39,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -71,7 +72,7 @@ C-----------------------------------------------
           IF(LOC_PROC/=P.AND.FR_WALL(P)/=0)THEN
             MSGTYP = MSGOFF
             CALL MPI_RECV(FTMP  ,LEN           ,REAL  ,IT_SPMD(P),
-     .                    MSGTYP,MPI_COMM_WORLD,STATUS,IERROR    )
+     .                    MSGTYP,COMM_RADIOSS,STATUS,IERROR    )
 C
             DO J = 1, LEN
               FS(J) = FS(J) + FTMP(J)
@@ -83,17 +84,17 @@ C
           IF(LOC_PROC/=P.AND.FR_WALL(P)/=0)THEN
             MSGTYP = MSGOFF2
             CALL MPI_SEND(FS    ,LEN           ,REAL  ,IT_SPMD(P),
-     .                    MSGTYP,MPI_COMM_WORLD,IERROR)
+     .                    MSGTYP,COMM_RADIOSS,IERROR)
           ENDIF
         ENDDO
 C
       ELSE
         MSGTYP = MSGOFF
         CALL MPI_SEND(FS    ,LEN           ,REAL  ,IT_SPMD(PMAIN),
-     .                MSGTYP,MPI_COMM_WORLD,IERROR)
+     .                MSGTYP,COMM_RADIOSS,IERROR)
         MSGTYP = MSGOFF2
         CALL MPI_RECV(FS    ,LEN           ,REAL  ,IT_SPMD(PMAIN),
-     .                MSGTYP,MPI_COMM_WORLD,STATUS,IERROR    )
+     .                MSGTYP,COMM_RADIOSS,STATUS,IERROR    )
       ENDIF
 C
 #endif

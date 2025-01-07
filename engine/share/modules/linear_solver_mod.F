@@ -291,13 +291,14 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
       CLASS (T_MUMPS_SOLVER), INTENT(INOUT) :: this
       INTEGER, INTENT(IN) :: MAT_DIM
       this%MUMPS_PAR%PAR = 1
 #ifdef MPI      
-      this%MUMPS_PAR%COMM = MPI_COMM_WORLD
+      this%MUMPS_PAR%COMM = COMM_RADIOSS
 #else 
       this%MUMPS_PAR%COMM = -1
 #endif
@@ -399,6 +400,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
       CLASS (T_MUMPS_SOLVER), INTENT(INOUT) :: this
@@ -432,7 +434,7 @@ C-----------------------------------------------
 #ifdef MPI
 !     Sent to all procs
          IF (NSPMD > 1) THEN
-            CALL MPI_BCAST(SOL, DIM, REAL, 0, MPI_COMM_WORLD, IERR)
+            CALL MPI_BCAST(SOL, DIM, REAL, 0, COMM_RADIOSS, IERR)
          ENDIF
 #endif     
       ENDIF
@@ -454,6 +456,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
       CLASS (T_MUMPS_SOLVER), INTENT(INOUT) :: this
@@ -564,6 +567,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
       CLASS (T_CG_SOLVER), INTENT(INOUT) :: this

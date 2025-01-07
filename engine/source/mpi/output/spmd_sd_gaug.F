@@ -38,6 +38,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -78,7 +79,7 @@ C-----------------------------------------------
             MSGTYP = MSGOFF 
             CALL MPI_IRECV(
      S        BUF(1,IDEB),SIZ,REAL,IT_SPMD(I),MSGTYP,
-     G        MPI_COMM_WORLD,REQ_R(NBIRECV),IERROR)
+     G        COMM_RADIOSS,REQ_R(NBIRECV),IERROR)
               IDEB = IDEB + NN
         END DO
 C
@@ -119,7 +120,7 @@ cc        IF(K > 0) THEN
          MSGTYP=MSGOFF
          CALL MPI_SEND(
      S      BUF,SIZ,REAL,IT_SPMD(1),MSGTYP,
-     G      MPI_COMM_WORLD,IERROR)
+     G      COMM_RADIOSS,IERROR)
 cc        ENDIF
       END IF
 C

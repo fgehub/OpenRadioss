@@ -38,6 +38,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -76,7 +77,7 @@ C
       CALL MPI_GATHER(
      S    RRBUF         ,SIZE  ,REAL,
      R    RBUF          ,SIZE  ,REAL,IT_SPMD(1),
-     G    MPI_COMM_WORLD,IERROR)
+     G    COMM_RADIOSS,IERROR)
       IF(ISPMD==0) THEN
         DO N=1,NINTSTAMP
          DO I = 2, NSPMD

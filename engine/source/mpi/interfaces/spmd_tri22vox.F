@@ -56,6 +56,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -139,11 +140,11 @@ C=======================================================================
      .          CRVOXEL(0,0,LOC_PROC),
      .          (LRVOXEL+1)*(LRVOXEL+1),
      .          MPI_INTEGER,
-     .          IT_SPMD(P),MSGTYP,MPI_COMM_WORLD,REQ_SC(P),IERROR)
+     .          IT_SPMD(P),MSGTYP,COMM_RADIOSS,REQ_SC(P),IERROR)
               MSGTYP = MSGOFF2 
               CALL MPI_ISEND(
      .          BMINMA(1,LOC_PROC),6        ,REAL  ,IT_SPMD(P),MSGTYP,
-     .          MPI_COMM_WORLD    ,REQ_SB(P),IERROR)
+     .          COMM_RADIOSS    ,REQ_SB(P),IERROR)
             ENDIF
           ENDIF
         ENDDO
@@ -164,11 +165,11 @@ C=======================================================================
      .          CRVOXEL(0,0,P),
      .         (LRVOXEL+1)*(LRVOXEL+1),
      .          MPI_INTEGER,
-     .          IT_SPMD(P),MSGTYP,MPI_COMM_WORLD,REQ_RC(NBIRECV),IERROR)
+     .          IT_SPMD(P),MSGTYP,COMM_RADIOSS,REQ_RC(NBIRECV),IERROR)
               MSGTYP = MSGOFF2
               CALL MPI_IRECV(
      .          BMINMA(1,P)   ,6              ,REAL  ,IT_SPMD(P),MSGTYP,
-     .          MPI_COMM_WORLD,REQ_RB(NBIRECV),IERROR)
+     .          COMM_RADIOSS,REQ_RB(NBIRECV),IERROR)
             ENDIF
           ENDIF
         ENDDO
@@ -237,7 +238,7 @@ C=======================================================================
          !-------------------------------------------!
           MSGTYP = MSGOFF3 
           CALL MPI_ISEND(NBOX(P),1,MPI_INTEGER,IT_SPMD(P),MSGTYP,
-     .                 MPI_COMM_WORLD,REQ_SD(P),IERROR)
+     .                 COMM_RADIOSS,REQ_SD(P),IERROR)
          !-------------------------------------------!
          !     Buffer Allocation                     !
          !-------------------------------------------!
@@ -268,7 +269,7 @@ C=======================================================================
             MSGTYP = MSGOFF4
             CALL MPI_ISEND(
      1        BUF(P)%P(1),L,MPI_DOUBLE_PRECISION,IT_SPMD(P),MSGTYP,
-     2        MPI_COMM_WORLD,REQ_SD2(P),ierror)
+     2        COMM_RADIOSS,REQ_SD2(P),ierror)
           ENDIF
         ENDDO
       ENDIF
@@ -284,7 +285,7 @@ C=======================================================================
             IF(LOC_PROC/=P) THEN
               MSGTYP = MSGOFF3 
               CALL MPI_RECV(NSNFI(NIN)%P(P),1,MPI_INTEGER,IT_SPMD(P),
-     .                      MSGTYP,MPI_COMM_WORLD,STATUS,IERROR)
+     .                      MSGTYP,COMM_RADIOSS,STATUS,IERROR)
               IF(NSNFI(NIN)%P(P)>0) THEN
                 L=L+1
                 ISINDEXI(L)=P
@@ -319,7 +320,7 @@ C=======================================================================
             IF(IR4R8 == 1) IAD = 2*IDEB-1
             CALL MPI_IRECV(
      1        XREM(1,IAD),LEN,MPI_DOUBLE_PRECISION,IT_SPMD(P),
-     2        MSGTYP,MPI_COMM_WORLD,REQ_RD(L),IERROR)
+     2        MSGTYP,COMM_RADIOSS,REQ_RD(L),IERROR)
             IDEB = IDEB + NSNFI(NIN)%P(P)
           ENDDO
           DO L = 1, NBIRECV

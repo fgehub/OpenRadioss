@@ -42,6 +42,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -72,7 +73,7 @@ C-----------------------------------------------
           L = IAD_ELEM(1,I)
           CALL MPI_IRECV(
      +      IRECV(L),SIZ,MPI_INTEGER,IT_SPMD(I),MSGTYP,
-     +      MPI_COMM_WORLD,REQ_R(I),IERROR)
+     +      COMM_RADIOSS,REQ_R(I),IERROR)
         ENDIF
       END DO
 C
@@ -85,7 +86,7 @@ C
           L = IAD_ELEM(1,I)
           CALL MPI_ISEND(
      +      ISEND(L),SIZ,MPI_INTEGER,IT_SPMD(I),MSGTYP,
-     +      MPI_COMM_WORLD,REQ_S(I),IERROR)
+     +      COMM_RADIOSS,REQ_S(I),IERROR)
        ENDIF
       ENDDO
 C
@@ -128,6 +129,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -179,7 +181,7 @@ C ----------
           IF(SIZ > 0) THEN 
            CALL MPI_IRECV(
      S      REC_BUF(L),SIZ,REAL,IT_SPMD(P),MSGTYP,
-     G      MPI_COMM_WORLD,REQ_R(P),IERROR)
+     G      COMM_RADIOSS,REQ_R(P),IERROR)
             L=L+SIZ
           ENDIF
        ENDDO
@@ -200,7 +202,7 @@ C -----------------
          
            CALL MPI_ISEND(
      S       SEND_BUF(IAD),SIZ,REAL,IT_SPMD(P),MSGTYP,
-     G       MPI_COMM_WORLD,REQ_S(P),IERROR)
+     G       COMM_RADIOSS,REQ_S(P),IERROR)
      
          ENDIF
        ENDDO
@@ -260,6 +262,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -310,7 +313,7 @@ C ----------
           IF(SIZ > 0) THEN 
            CALL MPI_IRECV(
      S      REC_BUF(L),SIZ,REAL,IT_SPMD(P),MSGTYP,
-     G      MPI_COMM_WORLD,REQ_R(P),IERROR)
+     G      COMM_RADIOSS,REQ_R(P),IERROR)
             L=L+SIZ
           ENDIF
        ENDDO
@@ -333,7 +336,7 @@ C -----------------
          
            CALL MPI_ISEND(
      S       SEND_BUF(IAD),SIZ,REAL,IT_SPMD(P),MSGTYP,
-     G       MPI_COMM_WORLD,REQ_S(P),IERROR)
+     G       COMM_RADIOSS,REQ_S(P),IERROR)
      
          ENDIF
        ENDDO

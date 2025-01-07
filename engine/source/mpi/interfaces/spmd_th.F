@@ -36,6 +36,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -59,7 +60,7 @@ C   S o u r c e  L i n e s
 C-----------------------------------------------
       IF (LEN > 0) THEN
         CALL MPI_ALLREDUCE(V,VTMP,LEN,REAL,MPI_MIN,
-     .                     MPI_COMM_WORLD,IERROR)
+     .                     COMM_RADIOSS,IERROR)
         IF(ISPMD==0)THEN
           DO I = 1, LEN
             V(I) = VTMP(I)
@@ -91,6 +92,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -113,7 +115,7 @@ C-----------------------------------------------
       IF (LEN > 0) THEN
         CALL MPI_REDUCE(V,VTMP,LEN,
      .                  REAL,MPI_SUM,IT_SPMD(1),
-     .                  MPI_COMM_WORLD,ierror)
+     .                  COMM_RADIOSS,ierror)
       ENDIF
       IF (ISPMD==0) THEN
         DO I=1,LEN
@@ -141,6 +143,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -163,7 +166,7 @@ C-----------------------------------------------
       IF (LEN > 0) THEN
         CALL MPI_REDUCE(V,VTMP,LEN,
      .                  MPI_DOUBLE_PRECISION,MPI_SUM,IT_SPMD(1),
-     .                  MPI_COMM_WORLD,ierror)
+     .                  COMM_RADIOSS,ierror)
       ENDIF
       IF (ISPMD==0) THEN
         DO I=1,LEN
@@ -190,6 +193,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -212,7 +216,7 @@ C-----------------------------------------------
       IF (LEN > 0) THEN
         CALL MPI_REDUCE(V,VTMP,LEN,
      .                  MPI_REAL4,MPI_SUM,IT_SPMD(1),
-     .                  MPI_COMM_WORLD,ierror)
+     .                  COMM_RADIOSS,ierror)
       ENDIF
       IF (ISPMD==0) THEN
         DO I=1,LEN
@@ -242,6 +246,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -266,14 +271,14 @@ C-----------------------------------------------
       IF (LOC_PROC/=MAIN) THEN
         MSGTYP=MSGOFF
             CALL MPI_SEND(TAG,1,MPI_INTEGER,IT_SPMD(MAIN),
-     .                    MSGTYP,MPI_COMM_WORLD,IERROR)
+     .                    MSGTYP,COMM_RADIOSS,IERROR)
       ELSE
         ICOMV(MAIN) = TAG
         DO K=1,NSPMD
           IF(K/=MAIN) THEN
             MSGTYP=MSGOFF
             CALL MPI_RECV(TAG,1,MPI_INTEGER,IT_SPMD(K),
-     .                    MSGTYP,MPI_COMM_WORLD,STATUS,IERROR)
+     .                    MSGTYP,COMM_RADIOSS,STATUS,IERROR)
             ICOMV(K) = TAG
           END IF
         END DO
@@ -304,6 +309,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -329,7 +335,7 @@ C-----------------------------------------------
       IF (LEN > 0) THEN
         CALL MPI_REDUCE(V,VTMP,LEN,
      .                  MPI_REAL,MPI_SUM,IT_SPMD(1),
-     .                  MPI_COMM_WORLD,IERROR)
+     .                  COMM_RADIOSS,IERROR)
       ENDIF
       IF (ISPMD==0) THEN
         DO I=1,LEN
@@ -380,6 +386,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -405,7 +412,7 @@ C-----------------------------------------------
       IF (LEN > 0) THEN
         CALL MPI_REDUCE(V,VTMP,LEN,
      .                  REAL,MPI_SUM,IT_SPMD(1),
-     .                  MPI_COMM_WORLD,IERROR)
+     .                  COMM_RADIOSS,IERROR)
       ENDIF
       IF (ISPMD==0) THEN
         DO I=1,LEN
@@ -436,6 +443,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -461,7 +469,7 @@ C-----------------------------------------------
       IF (LEN > 0) THEN
         CALL MPI_REDUCE(V,VTMP,LEN,
      .                  MPI_DOUBLE_PRECISION,MPI_SUM,IT_SPMD(1),
-     .                  MPI_COMM_WORLD,IERROR)
+     .                  COMM_RADIOSS,IERROR)
       ENDIF
       IF (ISPMD==0) THEN
         DO I=1,LEN
@@ -521,6 +529,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -542,7 +551,7 @@ C-----------------------------------------------
       IF (LEN > 0) THEN
         CALL MPI_REDUCE(V,VTMP,LEN,
      .                  MPI_INTEGER,MPI_SUM,IT_SPMD(1),
-     .                  MPI_COMM_WORLD,IERROR)
+     .                  COMM_RADIOSS,IERROR)
       ENDIF
       IF (ISPMD==0) THEN
         DO I=1,LEN
@@ -569,6 +578,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -592,7 +602,7 @@ C-----------------------------------------------
       IF (LEN > 0) THEN
         CALL MPI_REDUCE(V,VTMP,LEN,
      .                  REAL,MPI_MIN,IT_SPMD(1),
-     .                  MPI_COMM_WORLD,IERROR)
+     .                  COMM_RADIOSS,IERROR)
       ENDIF
       IF (ISPMD==0) THEN
         DO I=1,LEN
@@ -618,6 +628,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -642,7 +653,7 @@ C-----------------------------------------------
       IF (LEN > 0) THEN
         CALL MPI_REDUCE(V,VTMP,LEN,
      .                  REAL,MPI_MAX,IT_SPMD(1),
-     .                  MPI_COMM_WORLD,IERROR)
+     .                  COMM_RADIOSS,IERROR)
       ENDIF
       IF (ISPMD==0) THEN
         DO I=1,LEN

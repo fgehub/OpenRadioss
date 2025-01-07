@@ -65,6 +65,7 @@ C-----------------------------------------------
 #include      "task_c.inc"
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   D u m m y   A r g u m e n t s

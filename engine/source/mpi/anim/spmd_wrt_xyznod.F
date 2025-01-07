@@ -35,6 +35,7 @@ C-----------------------------------------------
 #include      "implicit_f.inc"
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -87,12 +88,12 @@ C   de noeuds au max
 
          MSGTYP = MSGOFF2 
          CALL MPI_SEND(IBUF,SIZ,MPI_INTEGER,IT_SPMD(1),MSGTYP,
-     .     MPI_COMM_WORLD,ierror)
+     .     COMM_RADIOSS,ierror)
 
 C  
          MSGTYP = MSGOFF
          CALL MPI_SEND(BUFSR,3*SIZ,MPI_REAL4,IT_SPMD(1),MSGTYP,
-     .     MPI_COMM_WORLD,ierror)
+     .     COMM_RADIOSS,ierror)
 
 
        ELSE
@@ -113,18 +114,18 @@ C   Reception du buffer entier des adresses NODGLOB
             MSGTYP = MSGOFF2
 
             CALL MPI_PROBE(IT_SPMD(I),MSGTYP,
-     .                    MPI_COMM_WORLD,STATUS,ierror)
+     .                    COMM_RADIOSS,STATUS,ierror)
               CALL MPI_GET_COUNT(STATUS,MPI_INTEGER,SIZ,ierror)
 
             CALL MPI_RECV(IBUF,SIZ,MPI_INTEGER,IT_SPMD(I),MSGTYP,
-     .                  MPI_COMM_WORLD,STATUS,ierror)
+     .                  COMM_RADIOSS,STATUS,ierror)
 
 C   Reception du buffer flottant des adresses NODGLOB
 
             MSGTYP2 = MSGOFF 
 
             CALL MPI_RECV(BUFSR,SIZ*3,MPI_REAL4,IT_SPMD(I),MSGTYP2,
-     .                  MPI_COMM_WORLD,STATUS,ierror)
+     .                  COMM_RADIOSS,STATUS,ierror)
          
             NREC = SIZ 
 

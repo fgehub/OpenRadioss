@@ -38,6 +38,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -65,13 +66,13 @@ C-----------------------------------------------
 
         CALL MPI_SEND(LEN,S1,MPI_INTEGER,
      .                IT_SPMD(1),MSGTYP,
-     .                MPI_COMM_WORLD,ierror)
+     .                COMM_RADIOSS,ierror)
 
         MSGTYP=MSGOFF
         IF(LEN > 0 ) THEN
           CALL MPI_SEND(SRBUF,LEN,MPI_INTEGER,
      .                IT_SPMD(1),MSGTYP,
-     .                MPI_COMM_WORLD,ierror)
+     .                COMM_RADIOSS,ierror)
         ENDIF
 
       ELSE
@@ -82,7 +83,7 @@ C-----------------------------------------------
             MSGTYP=MSGOFF2
             CALL MPI_RECV(RLEN,S1,MPI_INTEGER,
      .                    IT_SPMD(I),MSGTYP,
-     .                    MPI_COMM_WORLD,STATUS,ierror)
+     .                    COMM_RADIOSS,STATUS,ierror)
             MSGTYP=MSGOFF
 
             IF(RLEN > 0 ) THEN
@@ -90,7 +91,7 @@ C-----------------------------------------------
               ! SRBUF(LRECV+1) must exist
               CALL MPI_RECV(SRBUF(LRECV+1),RLEN,MPI_INTEGER,
      .                    IT_SPMD(I),MSGTYP,
-     .                    MPI_COMM_WORLD,STATUS,ierror)
+     .                    COMM_RADIOSS,STATUS,ierror)
 
             ENDIF
             LRECV = LRECV + RLEN 

@@ -52,6 +52,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 
 C-----------------------------------------------
@@ -81,7 +82,7 @@ C-----------------------------------------------
       IF (ISPMD/=0) THEN
         MSGTYP=MSGOFF
         CALL MPI_SEND(WAL,NBF_L,MPI_REAL4,IT_SPMD(1),MSGTYP,
-     .                MPI_COMM_WORLD,ierror)
+     .                COMM_RADIOSS,ierror)
 
       ELSE
 C  
@@ -97,10 +98,10 @@ C
           MSGTYP=MSGOFF
 
           CALL MPI_PROBE(IT_SPMD(K),MSGTYP,
-     .                   MPI_COMM_WORLD,STATUS,ierror)
+     .                   COMM_RADIOSS,STATUS,ierror)
           CALL MPI_GET_COUNT(STATUS,MPI_REAL4,NB_TMP,ierror)
           CALL MPI_RECV(WAR(IDEB),NB_TMP,MPI_REAL4,IT_SPMD(K),MSGTYP,
-     .                  MPI_COMM_WORLD,STATUS,ierror)
+     .                  COMM_RADIOSS,STATUS,ierror)
 
           IDEB = IDEB + NB_TMP
         END DO

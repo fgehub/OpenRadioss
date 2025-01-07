@@ -41,6 +41,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -62,7 +63,7 @@ C-----------------------------------------------
       IF (LEN > 0) THEN
         CALL MPI_REDUCE(V,VTMP,LEN,
      .                  MPI_INTEGER,MPI_MAX,IT_SPMD(1),
-     .                  MPI_COMM_WORLD,IERROR)
+     .                  COMM_RADIOSS,IERROR)
       ENDIF
       IF (ISPMD==0) THEN
         DO I=1,LEN

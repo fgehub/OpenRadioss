@@ -42,6 +42,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -83,7 +84,7 @@ C   Mise en place des buffers de reception
            MSGTYP = MSGOFF
            CALL MPI_IRECV(
      S      RBUF(L),SIZ,REAL,IT_SPMD(I),MSGTYP,
-     G      MPI_COMM_WORLD,REQ_R(I),IERROR)
+     G      COMM_RADIOSS,REQ_R(I),IERROR)
            L = L+SIZ
          END IF
          IAD_RECV(I+1) = L
@@ -112,7 +113,7 @@ C   Remplissage des buffers d'envoi et envoi des donnees
           L = IAD_SEND(I)
           CALL MPI_ISEND(
      S      SBUF(L),SIZ,REAL,IT_SPMD(I),MSGTYP,
-     G      MPI_COMM_WORLD,REQ_S(I),IERROR)
+     G      COMM_RADIOSS,REQ_S(I),IERROR)
        ENDIF                
       END DO
 

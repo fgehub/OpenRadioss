@@ -77,7 +77,8 @@ C-----------------------------------------------
 #include      "implicit_f.inc"
 #include      "comlock.inc"
 #ifdef MPI
-#include      "mpif.h"
+#include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s

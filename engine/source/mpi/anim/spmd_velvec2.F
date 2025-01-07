@@ -34,6 +34,7 @@ C-----------------------------------------------
 #include      "implicit_f.inc"
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -77,11 +78,11 @@ C   on envoie le nodglob
          MSGTYP = MSGOFF
 
          CALL MPI_SEND(NODGLOB,NUMNOD,MPI_INTEGER,IT_SPMD(1),MSGTYP,
-     .     MPI_COMM_WORLD,ierror)
+     .     COMM_RADIOSS,ierror)
 
          MSGTYP = MSGOFF2
          CALL MPI_SEND(V,3*NUMNOD,REAL,IT_SPMD(1),MSGTYP,
-     .     MPI_COMM_WORLD,ierror)
+     .     COMM_RADIOSS,ierror)
 
        ELSE
           DO I=1,NUMNODG
@@ -102,15 +103,15 @@ C   Reception du buffer entier des adresses NODGLOB
             MSGTYP = MSGOFF 
 
             CALL MPI_PROBE(IT_SPMD(I),MSGTYP,
-     .                    MPI_COMM_WORLD,STATUS,ierror)
+     .                    COMM_RADIOSS,STATUS,ierror)
               CALL MPI_GET_COUNT(STATUS,MPI_INTEGER,SIZ,ierror)
 
             CALL MPI_RECV(NGLOBI,SIZ,MPI_INTEGER,IT_SPMD(I),MSGTYP,
-     .                  MPI_COMM_WORLD,STATUS,ierror)
+     .                  COMM_RADIOSS,STATUS,ierror)
          
             MSGTYP = MSGOFF2
             CALL MPI_RECV(VRECV,3*SIZ,REAL,IT_SPMD(I),MSGTYP,
-     .                  MPI_COMM_WORLD,STATUS,ierror)
+     .                  COMM_RADIOSS,STATUS,ierror)
  
             DO J = 1, SIZ
               K = NGLOBI(J)

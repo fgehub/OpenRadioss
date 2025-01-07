@@ -55,6 +55,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -289,7 +290,7 @@ C
 C------------------------------------------
       IF(NSPMD > 0)THEN
 #ifdef MPI
-      CALL MPI_ALLREDUCE(MPI_IN_PLACE,IERR,1,MPI_INTEGER,MPI_MAX,MPI_COMM_WORLD,IERROR)
+      CALL MPI_ALLREDUCE(MPI_IN_PLACE,IERR,1,MPI_INTEGER,MPI_MAX,COMM_RADIOSS,IERROR)
 #endif
       END IF
       IF(IERR/=0)THEN

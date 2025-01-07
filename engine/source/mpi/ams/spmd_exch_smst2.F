@@ -49,6 +49,7 @@ C-----------------------------------------------
 C   M e s s a g e   P a s s i n g
 #ifdef  MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -157,7 +158,7 @@ C     REAL
             ! AlltoAll comm in order to know the sent buffer size
             CALL MPI_ALLTOALL(TAB_LOC(1),NINTER,MPI_INTEGER,
      .                        TAB_SEND(1),NINTER,MPI_INTEGER,
-     .                        MPI_COMM_WORLD,IERROR)
+     .                        COMM_RADIOSS,IERROR)
 
         ! -----------------------
             ! SECOND COMM.
@@ -224,7 +225,7 @@ C     REAL
               IF (SIZ > 0) THEN
                  MSGTYP = MSGOFF
                  CALL MPI_IRECV( IBUFR(IADR(P)),SIZ,MPI_INTEGER,IT_SPMD(P),MSGTYP,
-     .                           MPI_COMM_WORLD,REQ_R(P),IERROR )
+     .                           COMM_RADIOSS,REQ_R(P),IERROR )
               ENDIF
             ENDDO
             ! -----------------
@@ -252,7 +253,7 @@ C     REAL
                 IF(SIZ>0)THEN
                   MSGTYP = MSGOFF
                   CALL MPI_ISEND( IBUFS(IADS(P)),SIZ,MPI_INTEGER,IT_SPMD(P),MSGTYP,
-     .                            MPI_COMM_WORLD,REQ_SI(P),IERROR )
+     .                            COMM_RADIOSS,REQ_SI(P),IERROR )
                 ENDIF
               ENDIF ! ENDIF P/= LOC_PROC
             ENDDO  ! DO P=1, NSPMD
@@ -354,7 +355,7 @@ C     REAL
               IF (SIZ > 0) THEN
                  MSGTYP = MSGOFF2
                  CALL MPI_IRECV( IBUFR(IADR(P)),SIZ,MPI_INTEGER,IT_SPMD(P),MSGTYP,
-     .                           MPI_COMM_WORLD,REQ_R(P),IERROR )
+     .                           COMM_RADIOSS,REQ_R(P),IERROR )
               ENDIF
             ENDDO
             ! -----------------
@@ -400,7 +401,7 @@ C     REAL
                 IF(SIZ>0)THEN
                   MSGTYP = MSGOFF2
                   CALL MPI_ISEND( IBUFS(IADS(P)),SIZ,MPI_INTEGER,IT_SPMD(P),MSGTYP,
-     .                            MPI_COMM_WORLD,REQ_SI(P),IERROR )
+     .                            COMM_RADIOSS,REQ_SI(P),IERROR )
                 ENDIF
               ENDIF ! ENDIF P/= LOC_PROC
             ENDDO  ! DO P=1, NSPMD

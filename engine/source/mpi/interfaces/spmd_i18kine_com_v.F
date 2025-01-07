@@ -48,6 +48,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -157,7 +158,7 @@ c                 BBUFS(L+5)=MTF(6,NOD)
 C Send
               CALL MPI_ISEND(
      .          BBUFS(IADS(P)),SIZ,REAL     ,IT_SPMD(P),MSGTYP,
-     .          MPI_COMM_WORLD,REQ_SI(P),IERROR    )
+     .          COMM_RADIOSS,REQ_SI(P),IERROR    )
          ENDIF
        ENDIF
       ENDDO
@@ -171,7 +172,7 @@ C Recieve
           IF (SIZ > 0) THEN
             MSGTYP = MSGOFF 
             CALL MPI_RECV( BBUFR(IADR(P)),SIZ,REAL,IT_SPMD(P),MSGTYP,
-     *                     MPI_COMM_WORLD,STATUS,IERROR )
+     *                     COMM_RADIOSS,STATUS,IERROR )
            DO NIN=1,NINTER
              NTY   =IPARI(7,NIN)
              INACTI =IPARI(22,NIN)

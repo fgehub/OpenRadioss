@@ -63,6 +63,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -155,7 +156,7 @@ C-----------------------------------------------
           IF(P/=LOC_PROC.AND.RCV_SIZE>0) THEN
             MSGTYP = MSGOFF           
             CALL MPI_IRECV( BUFFER_RCV(ADRESS_RCV(P)),RCV_SIZE,REAL,
-     .                      IT_SPMD(P),MSGTYP,MPI_COMM_WORLD,REQUEST_RCV(P),ERROR_MPI )
+     .                      IT_SPMD(P),MSGTYP,COMM_RADIOSS,REQUEST_RCV(P),ERROR_MPI )
           ENDIF
         ENDDO
         ! ---------------------------
@@ -198,7 +199,7 @@ C-----------------------------------------------
           IF(P/=LOC_PROC.AND.SEND_SIZE>0) THEN
             MSGTYP = MSGOFF           
             CALL MPI_ISEND( BUFFER_SEND(ADRESS_SEND(P)),SEND_SIZE,REAL,
-     .                      IT_SPMD(P),MSGTYP,MPI_COMM_WORLD,REQUEST_SEND(P),ERROR_MPI )
+     .                      IT_SPMD(P),MSGTYP,COMM_RADIOSS,REQUEST_SEND(P),ERROR_MPI )
           ENDIF
         ENDDO
         ! ---------------------------

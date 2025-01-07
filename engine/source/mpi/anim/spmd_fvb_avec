@@ -19,6 +19,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -52,7 +53,7 @@ C-----------------------------------------------
       TMP1(3) = Z1
       call MPI_ALLREDUCE(TMP1,TMPO,3,REAL,
      .                   MPI_MIN,
-     .                   MPI_COMM_WORLD,ierror)
+     .                   COMM_RADIOSS,ierror)
       X1 = TMPO(1)
       Y1 = TMPO(2)
       Z1 = TMPO(3)
@@ -62,7 +63,7 @@ C
       TMP1(3)=Z2
       call MPI_ALLREDUCE(TMP1,TMPO,3,REAL,
      .                   MPI_MAX,
-     .                   MPI_COMM_WORLD,ierror)
+     .                   COMM_RADIOSS,ierror)
       X2 = TMPO(1)
       Y2 = TMPO(2)
       Z2 = TMPO(3)
@@ -92,6 +93,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -133,7 +135,7 @@ Cow Mise en place des buffers de reception
            MSGTYP = MSGOFF
            CALL MPI_IRECV(
      S      RBUF(L),SIZ,REAL,IT_SPMD(I),MSGTYP,
-     G      MPI_COMM_WORLD,REQ_R(I),IERROR)
+     G      COMM_RADIOSS,REQ_R(I),IERROR)
            L = L+SIZ
          END IF
          IAD_RECV(I+1) = L
@@ -162,7 +164,7 @@ Cow Remplissage des buffers d'envoi et envoi des donnees
           L = IAD_SEND(I)
           CALL MPI_ISEND(
      S      SBUF(L),SIZ,REAL,IT_SPMD(I),MSGTYP,
-     G      MPI_COMM_WORLD,REQ_S(I),IERROR)
+     G      COMM_RADIOSS,REQ_S(I),IERROR)
        ENDIF                
       END DO
 
@@ -216,6 +218,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -257,7 +260,7 @@ Cow Mise en place des buffers de reception
            MSGTYP = MSGOFF
            CALL MPI_IRECV(
      S      RBUF(L),SIZ,REAL,IT_SPMD(I),MSGTYP,
-     G      MPI_COMM_WORLD,REQ_R(I),IERROR)
+     G      COMM_RADIOSS,REQ_R(I),IERROR)
            L = L+SIZ
          END IF
          IAD_RECV(I+1) = L
@@ -287,7 +290,7 @@ C
 
           CALL MPI_ISEND(
      S      SBUF(L),SIZ,REAL,IT_SPMD(I),MSGTYP,
-     G      MPI_COMM_WORLD,REQ_S(I),IERROR)
+     G      COMM_RADIOSS,REQ_S(I),IERROR)
        ENDIF                
       END DO
 Cow Reception et traitement
@@ -358,6 +361,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 
 C-----------------------------------------------
@@ -387,7 +391,7 @@ C-----------------------------------------------
       IF (ISPMD.NE.0) THEN
         MSGTYP=MSGOFF
         CALL MPI_SEND(WAL,NBF_L,MPI_REAL4,IT_SPMD(1),MSGTYP,
-     .                MPI_COMM_WORLD,ierror)
+     .                COMM_RADIOSS,ierror)
 
       ELSE
 Cow
@@ -403,10 +407,10 @@ C
           MSGTYP=MSGOFF
 
           CALL MPI_PROBE(IT_SPMD(K),MSGTYP,
-     .                   MPI_COMM_WORLD,STATUS,ierror)
+     .                   COMM_RADIOSS,STATUS,ierror)
           CALL MPI_GET_COUNT(STATUS,MPI_REAL4,NB_TMP,ierror)
           CALL MPI_RECV(WAR(IDEB),NB_TMP,MPI_REAL4,IT_SPMD(K),MSGTYP,
-     .                  MPI_COMM_WORLD,STATUS,ierror)
+     .                  COMM_RADIOSS,STATUS,ierror)
 
           IDEB = IDEB + NB_TMP
         END DO
@@ -444,6 +448,7 @@ C-----------------------------------------------
 #include      "r4r8_p.inc"
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -495,11 +500,11 @@ Cow de noeuds au max
 
          MSGTYP = MSGOFF2 
          CALL MPI_SEND(IBUF,SIZ,MPI_INTEGER,IT_SPMD(1),MSGTYP,
-     .     MPI_COMM_WORLD,ierror)
+     .     COMM_RADIOSS,ierror)
 
          MSGTYP = MSGOFF
          CALL MPI_SEND(BUFSR,3*SIZ,MPI_REAL,IT_SPMD(1),MSGTYP,
-     .     MPI_COMM_WORLD,ierror)
+     .     COMM_RADIOSS,ierror)
 
        ELSE
           DO I=1,NUMNOD
@@ -517,17 +522,17 @@ Cow Reception du buffer entier des adresses NODGLOB
             MSGTYP = MSGOFF2
 
             CALL MPI_PROBE(IT_SPMD(I),MSGTYP,
-     .                    MPI_COMM_WORLD,STATUS,ierror)
+     .                    COMM_RADIOSS,STATUS,ierror)
 	    CALL MPI_GET_COUNT(STATUS,MPI_INTEGER,SIZ,ierror)
 
             CALL MPI_RECV(IBUF,SIZ,MPI_INTEGER,IT_SPMD(I),MSGTYP,
-     .                  MPI_COMM_WORLD,STATUS,ierror)
+     .                  COMM_RADIOSS,STATUS,ierror)
 
 Cow Reception du buffer flottant des adresses NODGLOB
 
             MSGTYP = MSGOFF
             CALL MPI_RECV(BUFSR,3*SIZ,MPI_REAL,IT_SPMD(I),MSGTYP,
-     .                  MPI_COMM_WORLD,STATUS,ierror)
+     .                  COMM_RADIOSS,STATUS,ierror)
          
             NREC = SIZ
  
@@ -560,6 +565,7 @@ C-----------------------------------------------
 #include      "r4r8_p.inc"
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -611,11 +617,11 @@ Cow de noeuds au max
 
          MSGTYP = MSGOFF2 
          CALL MPI_SEND(IBUF,SIZ,MPI_INTEGER,IT_SPMD(1),MSGTYP,
-     .     MPI_COMM_WORLD,ierror)
+     .     COMM_RADIOSS,ierror)
 
          MSGTYP = MSGOFF 
          CALL MPI_SEND(BUFSR,3*SIZ,MPI_REAL,IT_SPMD(1),MSGTYP,
-     .     MPI_COMM_WORLD,ierror)
+     .     COMM_RADIOSS,ierror)
 
        ELSE
           DO I=1,NUMNOD
@@ -633,17 +639,17 @@ Cow Reception du buffer entier des adresses NODGLOB
             MSGTYP = MSGOFF2 
 
             CALL MPI_PROBE(IT_SPMD(I),MSGTYP,
-     .                    MPI_COMM_WORLD,STATUS,ierror)
+     .                    COMM_RADIOSS,STATUS,ierror)
 	    CALL MPI_GET_COUNT(STATUS,MPI_INTEGER,SIZ,ierror)
 
             CALL MPI_RECV(IBUF,SIZ,MPI_INTEGER,IT_SPMD(I),MSGTYP,
-     .                  MPI_COMM_WORLD,STATUS,ierror)
+     .                  COMM_RADIOSS,STATUS,ierror)
 
 Cow Reception du buffer flottant des adresses NODGLOB
 
             MSGTYP = MSGOFF
             CALL MPI_RECV(BUFSR,3*SIZ,MPI_REAL,IT_SPMD(I),MSGTYP,
-     .                  MPI_COMM_WORLD,STATUS,ierror)
+     .                  COMM_RADIOSS,STATUS,ierror)
          
             NREC = SIZ
  
@@ -682,6 +688,7 @@ C-----------------------------------------------
 #include      "r4r8_p.inc"
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -782,19 +789,19 @@ Csv de noeuds au max
 
          MSGTYP = MSGOFF
          CALL MPI_SEND(IDNOD0,SIZ,MPI_INTEGER,IT_SPMD(1),MSGTYP,
-     .     MPI_COMM_WORLD,ierror)
+     .     COMM_RADIOSS,ierror)
 
          MSGTYP = MSGOFF2
          CALL MPI_SEND(MAXV0,SIZ,MPI_REAL,IT_SPMD(1),MSGTYP,
-     .     MPI_COMM_WORLD,ierror)
+     .     COMM_RADIOSS,ierror)
 
          MSGTYP = MSGOFF3
          CALL MPI_SEND(MAXV1,SIZ,MPI_REAL,IT_SPMD(1),MSGTYP,
-     .     MPI_COMM_WORLD,ierror)
+     .     COMM_RADIOSS,ierror)
 
          MSGTYP = MSGOFF4 
          CALL MPI_SEND(MAXV2,SIZ,MPI_REAL,IT_SPMD(1),MSGTYP,
-     .     MPI_COMM_WORLD,ierror)
+     .     COMM_RADIOSS,ierror)
 
        ELSE ! ISPMD == 0
           DO I=1,NUMNOD
@@ -825,25 +832,25 @@ Csv Reception
             MSGTYP = MSGOFF
 
             CALL MPI_PROBE(IT_SPMD(I),MSGTYP,
-     .                    MPI_COMM_WORLD,STATUS,ierror)
+     .                    COMM_RADIOSS,STATUS,ierror)
 	    CALL MPI_GET_COUNT(STATUS,MPI_INTEGER,SIZ,ierror)
 
             CALL MPI_RECV(IDNOD0,SIZ,MPI_INTEGER,IT_SPMD(I),MSGTYP,
-     .                  MPI_COMM_WORLD,STATUS,ierror)
+     .                  COMM_RADIOSS,STATUS,ierror)
 
 Csv Reception
 
             MSGTYP = MSGOFF2 
             CALL MPI_RECV(MAXV0,SIZ,MPI_REAL,IT_SPMD(I),MSGTYP,
-     .                  MPI_COMM_WORLD,STATUS,ierror)
+     .                  COMM_RADIOSS,STATUS,ierror)
 
             MSGTYP = MSGOFF3
             CALL MPI_RECV(MAXV1,SIZ,MPI_REAL,IT_SPMD(I),MSGTYP,
-     .                  MPI_COMM_WORLD,STATUS,ierror)
+     .                  COMM_RADIOSS,STATUS,ierror)
 
             MSGTYP = MSGOFF4 
             CALL MPI_RECV(MAXV2,SIZ,MPI_REAL,IT_SPMD(I),MSGTYP,
-     .                  MPI_COMM_WORLD,STATUS,ierror)
+     .                  COMM_RADIOSS,STATUS,ierror)
 
 
             J = 1
@@ -971,6 +978,7 @@ C-----------------------------------------------
 #include      "r4r8_p.inc"
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -1020,11 +1028,11 @@ Cow de noeuds au max
 
          MSGTYP = MSGOFF2 
          CALL MPI_SEND(IBUF,SIZ,MPI_INTEGER,IT_SPMD(1),MSGTYP,
-     .     MPI_COMM_WORLD,ierror)
+     .     COMM_RADIOSS,ierror)
 
          MSGTYP = MSGOFF 
          CALL MPI_SEND(BUFSR,SIZ,MPI_REAL,IT_SPMD(1),MSGTYP,
-     .     MPI_COMM_WORLD,ierror)
+     .     COMM_RADIOSS,ierror)
 
        ELSE
           DO I=1,NUMNOD
@@ -1040,17 +1048,17 @@ Cow Reception du buffer entier des adresses NODGLOB
             MSGTYP = MSGOFF2
 
             CALL MPI_PROBE(IT_SPMD(I),MSGTYP,
-     .                    MPI_COMM_WORLD,STATUS,ierror)
+     .                    COMM_RADIOSS,STATUS,ierror)
 	    CALL MPI_GET_COUNT(STATUS,MPI_INTEGER,SIZ,ierror)
 
             CALL MPI_RECV(IBUF,SIZ,MPI_INTEGER,IT_SPMD(I),MSGTYP,
-     .                  MPI_COMM_WORLD,STATUS,ierror)
+     .                  COMM_RADIOSS,STATUS,ierror)
 
 Cow Reception du buffer flottant des adresses NODGLOB
 
             MSGTYP = MSGOFF 
             CALL MPI_RECV(BUFSR,SIZ,MPI_REAL,IT_SPMD(I),MSGTYP,
-     .                  MPI_COMM_WORLD,STATUS,ierror)
+     .                  COMM_RADIOSS,STATUS,ierror)
          
             NREC = SIZ
  
@@ -1087,6 +1095,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -1115,13 +1124,13 @@ C-----------------------------------------------
 
         CALL MPI_SEND(LEN,S1,MPI_INTEGER,
      .                IT_SPMD(1),MSGTYP,
-     .                MPI_COMM_WORLD,ierror)
+     .                COMM_RADIOSS,ierror)
 
         MSGTYP=MSGOFF
         IF(LEN > 0 ) THEN
           CALL MPI_SEND(SRBUF,LEN,MPI_INTEGER,
      .                IT_SPMD(1),MSGTYP,
-     .                MPI_COMM_WORLD,ierror)
+     .                COMM_RADIOSS,ierror)
         ENDIF
 
       ELSE
@@ -1132,7 +1141,7 @@ C-----------------------------------------------
             MSGTYP=MSGOFF2
             CALL MPI_RECV(RLEN,S1,MPI_INTEGER,
      .                    IT_SPMD(I),MSGTYP,
-     .                    MPI_COMM_WORLD,STATUS,ierror)
+     .                    COMM_RADIOSS,STATUS,ierror)
             MSGTYP=MSGOFF
 
             IF(RLEN > 0 ) THEN
@@ -1140,7 +1149,7 @@ C-----------------------------------------------
               ! SRBUF(LRECV+1) must exist
               CALL MPI_RECV(SRBUF(LRECV+1),RLEN,MPI_INTEGER,
      .                    IT_SPMD(I),MSGTYP,
-     .                    MPI_COMM_WORLD,STATUS,ierror)
+     .                    COMM_RADIOSS,STATUS,ierror)
 
             ENDIF
             LRECV = LRECV + RLEN 
@@ -1173,6 +1182,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -1201,7 +1211,7 @@ C-----------------------------------------------
       S1 = 1
 
       ! Send Local sizes to Zero
-      CALL MPI_GATHER(LEN,S1,MPI_INTEGER,SIZES,S1,MPI_INTEGER,0,MPI_COMM_WORLD,ierror)
+      CALL MPI_GATHER(LEN,S1,MPI_INTEGER,SIZES,S1,MPI_INTEGER,0,COMM_RADIOSS,ierror)
 
 
       IF(ISPMD == 0) THEN
@@ -1219,10 +1229,10 @@ C-----------------------------------------------
         ALLOCATE(SRBUF2(1))
       ENDIF
 
-      CALL MPI_GATHERV(SRBUF,LEN,MPI_INTEGER,SRBUF2,SIZES,POINTERS,MPI_INTEGER,0,MPI_COMM_WORLD,ierror)
+      CALL MPI_GATHERV(SRBUF,LEN,MPI_INTEGER,SRBUF2,SIZES,POINTERS,MPI_INTEGER,0,COMM_RADIOSS,ierror)
 
 
-      CALL MPI_BARRIER(MPI_COMM_WORLD,ierror)
+      CALL MPI_BARRIER(COMM_RADIOSS,ierror)
 
       IF(ISPMD == 0) THEN
         DO I=1,LRECV
@@ -1252,6 +1262,7 @@ C-----------------------------------------------
 #include      "r4r8_p.inc"
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -1303,11 +1314,11 @@ Cow de noeuds au max
 
          MSGTYP = MSGOFF2
          CALL MPI_SEND(IBUF,SIZ,MPI_INTEGER,IT_SPMD(1),MSGTYP,
-     .     MPI_COMM_WORLD,ierror)
+     .     COMM_RADIOSS,ierror)
 
          MSGTYP = MSGOFF 
          CALL MPI_SEND(BUFSR,SIZ,MPI_REAL,IT_SPMD(1),MSGTYP,
-     .     MPI_COMM_WORLD,ierror)
+     .     COMM_RADIOSS,ierror)
 
        ELSE
           siz = 0
@@ -1325,17 +1336,17 @@ Cow Reception du buffer entier des adresses NODGLOB
             MSGTYP = MSGOFF2 
 
             CALL MPI_PROBE(IT_SPMD(I),MSGTYP,
-     .                    MPI_COMM_WORLD,STATUS,ierror)
+     .                    COMM_RADIOSS,STATUS,ierror)
 	    CALL MPI_GET_COUNT(STATUS,MPI_INTEGER,SIZ,ierror)
 
             CALL MPI_RECV(IBUF,SIZ,MPI_INTEGER,IT_SPMD(I),MSGTYP,
-     .                  MPI_COMM_WORLD,STATUS,ierror)
+     .                  COMM_RADIOSS,STATUS,ierror)
 
 Cow Reception du buffer flottant des adresses NODGLOB
 
             MSGTYP = MSGOFF 
             CALL MPI_RECV(BUFSR,SIZ,MPI_REAL,IT_SPMD(I),MSGTYP,
-     .                  MPI_COMM_WORLD,STATUS,ierror)
+     .                  COMM_RADIOSS,STATUS,ierror)
          
             NREC = SIZ
  
@@ -1366,6 +1377,7 @@ C-----------------------------------------------
 #include      "r4r8_p.inc"
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -1415,11 +1427,11 @@ Cow de noeuds au max
 
          MSGTYP = MSGOFF2 
          CALL MPI_SEND(IBUF,SIZ,MPI_INTEGER,IT_SPMD(1),MSGTYP,
-     .     MPI_COMM_WORLD,ierror)
+     .     COMM_RADIOSS,ierror)
 
          MSGTYP = MSGOFF
          CALL MPI_SEND(BUFSR,SIZ,MPI_REAL,IT_SPMD(1),MSGTYP,
-     .     MPI_COMM_WORLD,ierror)
+     .     COMM_RADIOSS,ierror)
 
        ELSE
           DO I=1,NUMNOD
@@ -1435,17 +1447,17 @@ Cow Reception du buffer entier des adresses NODGLOB
             MSGTYP = MSGOFF2 + I
 
             CALL MPI_PROBE(IT_SPMD(I),MSGTYP,
-     .                    MPI_COMM_WORLD,STATUS,ierror)
+     .                    COMM_RADIOSS,STATUS,ierror)
 	    CALL MPI_GET_COUNT(STATUS,MPI_INTEGER,SIZ,ierror)
 
             CALL MPI_RECV(IBUF,SIZ,MPI_INTEGER,IT_SPMD(I),MSGTYP,
-     .                  MPI_COMM_WORLD,STATUS,ierror)
+     .                  COMM_RADIOSS,STATUS,ierror)
 
 Cow Reception du buffer flottant des adresses NODGLOB
 
             MSGTYP = MSGOFF 
             CALL MPI_RECV(BUFSR,SIZ,MPI_REAL,IT_SPMD(I),MSGTYP,
-     .                  MPI_COMM_WORLD,STATUS,ierror)
+     .                  COMM_RADIOSS,STATUS,ierror)
          
             NREC = SIZ
  
@@ -1480,6 +1492,7 @@ C-----------------------------------------------
 #include      "r4r8_p.inc"
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -1527,7 +1540,7 @@ C-----------------------------------------------
 
          MSGTYP = MSGOFF 
          CALL MPI_SEND(BUFSR,2*SIZ,MPI_INTEGER,IT_SPMD(1),MSGTYP,
-     .     MPI_COMM_WORLD,ierror)
+     .     COMM_RADIOSS,ierror)
 
        ELSE
           DO I=1,NUMNOD
@@ -1543,11 +1556,11 @@ Cow Reception du buffer entier des adresses NODGLOB
             MSGTYP = MSGOFF
 
             CALL MPI_PROBE(IT_SPMD(I),MSGTYP,
-     .                    MPI_COMM_WORLD,STATUS,ierror)
+     .                    COMM_RADIOSS,STATUS,ierror)
 	    CALL MPI_GET_COUNT(STATUS,MPI_INTEGER,SIZ,ierror)
 
             CALL MPI_RECV(BUFSR,SIZ,MPI_INTEGER,IT_SPMD(I),MSGTYP,
-     .                  MPI_COMM_WORLD,STATUS,ierror)
+     .                  COMM_RADIOSS,STATUS,ierror)
          
             NREC = SIZ/2
  
@@ -1590,6 +1603,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -1693,7 +1707,7 @@ Cow Envoi du buffer BUFSPM vers les differents procs
             B = BUFSEND(I)
             SIZ = BUFSEND(I+1)-BUFSEND(I)
             CALL MPI_ISEND(BUFSPM(B),SIZ,MPI_INTEGER,IT_SPMD(I),MSGTYP,
-     .         MPI_COMM_WORLD,ISD(I),ierror)
+     .         COMM_RADIOSS,ISD(I),ierror)
 
           ENDIF
         ENDDO
@@ -1709,11 +1723,11 @@ Cow differents processeurs
 
             MSGTYP = MSGOFF
             CALL MPI_PROBE(IT_SPMD(I),MSGTYP,
-     .                    MPI_COMM_WORLD,STATUS,ierror)
+     .                    COMM_RADIOSS,STATUS,ierror)
 	    CALL MPI_GET_COUNT(STATUS,MPI_INTEGER,SIZ,ierror)
 
             CALL MPI_RECV(BUFRECVM(L),SIZ,MPI_INTEGER,IT_SPMD(I),MSGTYP,
-     .                  MPI_COMM_WORLD,STATUS,ierror)
+     .                  COMM_RADIOSS,STATUS,ierror)
 
             L = L + SIZ
             BUFRECVM(L)=0
@@ -1801,7 +1815,7 @@ Cow envoi tableau vers proc 0
 
           MSGTYP = MSGOFF2
           CALL MPI_SEND(BUFSPO,L,MPI_INTEGER,IT_SPMD(1),MSGTYP,
-     .         MPI_COMM_WORLD,ierror)
+     .         COMM_RADIOSS,ierror)
         ENDIF
 
 
@@ -1829,11 +1843,11 @@ ccc
               MSGTYP = MSGOFF2
               PTRPO(I) = LPO
               CALL MPI_PROBE(IT_SPMD(I),MSGTYP,
-     .                     MPI_COMM_WORLD,STATUS,ierror)
+     .                     COMM_RADIOSS,STATUS,ierror)
               CALL MPI_GET_COUNT(STATUS,MPI_INTEGER,SIZ,ierror)
 
               CALL MPI_RECV(PORBY(LPO),SIZ,MPI_INTEGER,IT_SPMD(I),
-     .                  MSGTYP, MPI_COMM_WORLD,STATUS,ierror)
+     .                  MSGTYP, COMM_RADIOSS,STATUS,ierror)
               LPO=LPO+SIZ
             ELSE
               PTRPO(I) = LPO
@@ -1891,6 +1905,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -1964,14 +1979,14 @@ C Proc zero reception des tailles
         DO P=2,NSPMD
            MSGTYP = MSGOFF
            CALL MPI_RECV(P0RECRBE2(1,P),NRBE2G,MPI_INTEGER,IT_SPMD(P),
-     *                   MSGTYP,MPI_COMM_WORLD,STATUS,IERROR)
+     *                   MSGTYP,COMM_RADIOSS,STATUS,IERROR)
         ENDDO
 
       ELSE
 C Procs autres envoi
         MSGTYP = MSGOFF
         CALL MPI_SEND(SZLOCRBE2,NRBE2G,MPI_INTEGER,IT_SPMD(1),
-     .                MSGTYP,MPI_COMM_WORLD,IERROR)
+     .                MSGTYP,COMM_RADIOSS,IERROR)
 
       ENDIF
 
@@ -1998,7 +2013,7 @@ C ------------------------
          IF (SNRBE2 > 0)THEN
            MSGTYP = MSGOFF2
            CALL  MPI_SEND(SENDBUF,SNRBE2,MPI_INTEGER,IT_SPMD(1),MSGTYP,
-     *                  MPI_COMM_WORLD,IERROR)
+     *                  COMM_RADIOSS,IERROR)
          ENDIF
          DEALLOCATE(SENDBUF)
 
@@ -2068,7 +2083,7 @@ C Taille du buffer de reception
              ALLOCATE(RECBUF(SIZRBE2))
              MSGTYP = MSGOFF2 
              CALL MPI_RECV(RECBUF,SIZRBE2,MPI_INTEGER,IT_SPMD(P),MSGTYP,
-     *                   MPI_COMM_WORLD,STATUS,IERROR)
+     *                   COMM_RADIOSS,STATUS,IERROR)
 
              PSNRBE2=0
              DO I=1,NRBE2G
@@ -2140,6 +2155,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -2211,7 +2227,7 @@ C Proc zero reception des tailles
         DO P=2,NSPMD
            MSGTYP = MSGOFF 
            CALL MPI_RECV(P0RECRBE3(1,P),NRBE3G,MPI_INTEGER,IT_SPMD(P),
-     *                   MSGTYP,MPI_COMM_WORLD,STATUS,IERROR)
+     *                   MSGTYP,COMM_RADIOSS,STATUS,IERROR)
         ENDDO
 
 
@@ -2219,7 +2235,7 @@ C Proc zero reception des tailles
 C Procs autres envoi
         MSGTYP = MSGOFF 
         CALL MPI_SEND(SZLOCRBE3,NRBE3G,MPI_INTEGER,IT_SPMD(1),
-     .                MSGTYP,MPI_COMM_WORLD,IERROR)
+     .                MSGTYP,COMM_RADIOSS,IERROR)
 
       ENDIF
 
@@ -2247,7 +2263,7 @@ C ------------------------
          IF (SNRBE3 > 0)THEN
            MSGTYP = MSGOFF2
            CALL  MPI_SEND(SENDBUF,SNRBE3,MPI_INTEGER,IT_SPMD(1),MSGTYP,
-     *                  MPI_COMM_WORLD,IERROR)
+     *                  COMM_RADIOSS,IERROR)
          ENDIF
          DEALLOCATE(SENDBUF)
 
@@ -2316,7 +2332,7 @@ C Taille du buffer de reception
              ALLOCATE(RECBUF(SIZRBE3))
              MSGTYP = MSGOFF2
              CALL MPI_RECV(RECBUF,SIZRBE3,MPI_INTEGER,IT_SPMD(P),MSGTYP,
-     *                   MPI_COMM_WORLD,STATUS,IERROR)
+     *                   COMM_RADIOSS,STATUS,IERROR)
 
              PSNRBE3=0
              DO I=1,NRBE3G
@@ -2385,6 +2401,7 @@ C-----------------------------------------------
 #include      "r4r8_p.inc"
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -2429,11 +2446,11 @@ Cow on envoie le nodglob
          MSGTYP = MSGOFF
 
          CALL MPI_SEND(NODGLOB,NUMNOD,MPI_INTEGER,IT_SPMD(1),MSGTYP,
-     .     MPI_COMM_WORLD,ierror)
+     .     COMM_RADIOSS,ierror)
 
          MSGTYP = MSGOFF2
          CALL MPI_SEND(V,3*NUMNOD,REAL,IT_SPMD(1),MSGTYP,
-     .     MPI_COMM_WORLD,ierror)
+     .     COMM_RADIOSS,ierror)
 
        ELSE
           DO I=1,NUMNODG
@@ -2454,15 +2471,15 @@ Cow Reception du buffer entier des adresses NODGLOB
             MSGTYP = MSGOFF 
 
             CALL MPI_PROBE(IT_SPMD(I),MSGTYP,
-     .                    MPI_COMM_WORLD,STATUS,ierror)
+     .                    COMM_RADIOSS,STATUS,ierror)
 	    CALL MPI_GET_COUNT(STATUS,MPI_INTEGER,SIZ,ierror)
 
             CALL MPI_RECV(NGLOBI,SIZ,MPI_INTEGER,IT_SPMD(I),MSGTYP,
-     .                  MPI_COMM_WORLD,STATUS,ierror)
+     .                  COMM_RADIOSS,STATUS,ierror)
          
             MSGTYP = MSGOFF2
             CALL MPI_RECV(VRECV,3*SIZ,REAL,IT_SPMD(I),MSGTYP,
-     .                  MPI_COMM_WORLD,STATUS,ierror)
+     .                  COMM_RADIOSS,STATUS,ierror)
  
             DO J = 1, SIZ
               K = NGLOBI(J)
@@ -2497,6 +2514,7 @@ C-----------------------------------------------
 #include      "r4r8_p.inc"
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -2550,12 +2568,12 @@ Cow de noeuds au max
 
          MSGTYP = MSGOFF2 
          CALL MPI_SEND(IBUF,SIZ,MPI_INTEGER,IT_SPMD(1),MSGTYP,
-     .     MPI_COMM_WORLD,ierror)
+     .     COMM_RADIOSS,ierror)
 
 Cow
          MSGTYP = MSGOFF
          CALL MPI_SEND(BUFSR,3*SIZ,MPI_REAL4,IT_SPMD(1),MSGTYP,
-     .     MPI_COMM_WORLD,ierror)
+     .     COMM_RADIOSS,ierror)
 
 
        ELSE
@@ -2576,18 +2594,18 @@ Cow Reception du buffer entier des adresses NODGLOB
             MSGTYP = MSGOFF2
 
             CALL MPI_PROBE(IT_SPMD(I),MSGTYP,
-     .                    MPI_COMM_WORLD,STATUS,ierror)
+     .                    COMM_RADIOSS,STATUS,ierror)
 	    CALL MPI_GET_COUNT(STATUS,MPI_INTEGER,SIZ,ierror)
 
             CALL MPI_RECV(IBUF,SIZ,MPI_INTEGER,IT_SPMD(I),MSGTYP,
-     .                  MPI_COMM_WORLD,STATUS,ierror)
+     .                  COMM_RADIOSS,STATUS,ierror)
 
 Cow Reception du buffer flottant des adresses NODGLOB
 
             MSGTYP2 = MSGOFF 
 
             CALL MPI_RECV(BUFSR,SIZ*3,MPI_REAL4,IT_SPMD(I),MSGTYP2,
-     .                  MPI_COMM_WORLD,STATUS,ierror)
+     .                  COMM_RADIOSS,STATUS,ierror)
          
             NREC = SIZ 
 
@@ -2641,6 +2659,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -2670,7 +2689,7 @@ C-----------------------------------------------
       IF (ISPMD.NE.0) THEN
          MSGTYP= MSGOFF
          CALL MPI_SEND(IAD,NBPART,MPI_INTEGER,IT_SPMD(1),MSGTYP,
-     .                MPI_COMM_WORLD,ierror)
+     .                COMM_RADIOSS,ierror)
 
       ELSE
         DO N = 1, NBPART
@@ -2680,10 +2699,10 @@ C-----------------------------------------------
         DO K=2,NSPMD
           MSGTYP= MSGOFF
           CALL MPI_PROBE(IT_SPMD(K),MSGTYP,
-     .                   MPI_COMM_WORLD,STATUS,ierror)
+     .                   COMM_RADIOSS,STATUS,ierror)
           CALL MPI_GET_COUNT(STATUS,MPI_INTEGER,NB_TMP,ierror)
           CALL MPI_RECV(RECBUF,NB_TMP,MPI_INTEGER,IT_SPMD(K),MSGTYP,
-     .                  MPI_COMM_WORLD,STATUS,ierror)
+     .                  COMM_RADIOSS,STATUS,ierror)
 
           DO N = 1, NBPART
             IADG(K,N) = RECBUF(N)
@@ -2733,6 +2752,7 @@ C-----------------------------------------------
 
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 
 C-----------------------------------------------
@@ -2765,7 +2785,7 @@ C-----------------------------------------------
         MSGTYP= MSGOFF
 
         CALL MPI_SEND(NP,NBF_L,MPI_INTEGER,IT_SPMD(1),MSGTYP,
-     .                MPI_COMM_WORLD,ierror)
+     .                COMM_RADIOSS,ierror)
 
       ELSE
         DO K=1,NBF_L
@@ -2779,11 +2799,11 @@ C
         MSGTYP= MSGOFF
 
          CALL MPI_PROBE(IT_SPMD(K),MSGTYP,
-     .                   MPI_COMM_WORLD,STATUS,ierror)
+     .                   COMM_RADIOSS,STATUS,ierror)
          CALL MPI_GET_COUNT(STATUS,MPI_INTEGER,NB_TMP,ierror)
 
          CALL MPI_RECV(RBUF(IDEB),NB_TMP,MPI_INTEGER,IT_SPMD(K),MSGTYP,
-     .                  MPI_COMM_WORLD,STATUS,ierror)
+     .                  COMM_RADIOSS,STATUS,ierror)
 
         IDEB = IDEB + NB_TMP
         END DO
@@ -2827,6 +2847,7 @@ C-----------------------------------------------
 #include      "r4r8_p.inc"
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -2897,7 +2918,7 @@ Cow de noeuds au max
 
         MSGTYP = MSGOFF2 
         CALL MPI_SEND(IBUF,4*SIZ,MPI_INTEGER,IT_SPMD(1),MSGTYP,
-     .     MPI_COMM_WORLD,ierror)
+     .     COMM_RADIOSS,ierror)
 
        ELSE
           DO I=1,NUMNOD
@@ -2925,11 +2946,11 @@ Cow de noeuds au max
             MSGTYP = MSGOFF2
 
             CALL MPI_PROBE(IT_SPMD(I),MSGTYP,
-     .                    MPI_COMM_WORLD,STATUS,ierror)
+     .                    COMM_RADIOSS,STATUS,ierror)
             CALL MPI_GET_COUNT(STATUS,MPI_INTEGER,SIZ,ierror)
 
             CALL MPI_RECV(IBUF,SIZ,MPI_INTEGER,IT_SPMD(I),MSGTYP,
-     .                  MPI_COMM_WORLD,STATUS,ierror)
+     .                  COMM_RADIOSS,STATUS,ierror)
 
          
             NREC = SIZ/4
@@ -2969,6 +2990,7 @@ C-----------------------------------------------
 #include "r4r8_p.inc"
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 #include "com04_c.inc"
 #include "task_c.inc"
@@ -3056,7 +3078,7 @@ C-----------------------------------------------
           
            CALL MPI_REDUCE(XSECTMP,XSEC,LEN,
      .                  REAL,MPI_SUM,IT_SPMD(1),
-     .                  MPI_COMM_WORLD,IERROR)
+     .                  COMM_RADIOSS,IERROR)
 
 
 Cow
@@ -3093,6 +3115,7 @@ C-----------------------------------------------
 #include      "r4r8_p.inc"
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -3145,12 +3168,12 @@ C-----------------------------------------------
 
            MSGTYP = MSGOFF 
            CALL MPI_SEND(XYZWL,3,REAL,IT_SPMD(1),MSGTYP,
-     .     MPI_COMM_WORLD,ierror)
+     .     COMM_RADIOSS,ierror)
          END IF
          IF (ISPMD.EQ.0) THEN
             MSGTYP = MSGOFF 
             CALL MPI_RECV(XYZWL,3,REAL,IT_SPMD(P),MSGTYP,
-     .              MPI_COMM_WORLD,STATUS,ierror)
+     .              COMM_RADIOSS,STATUS,ierror)
             XWL = XYZWL(1)
             YWL = XYZWL(2) 
             ZWL = XYZWL(3) 
@@ -3175,7 +3198,8 @@ C-----------------------------------------------
 #include      "implicit_f.inc"
 #include      "r4r8_p.inc"
 #ifdef MPI
-#include      "mpif.h"
+#include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -3207,7 +3231,7 @@ Cow Tableau utilise par proc 0
        IF (ISPMD.NE.0) THEN
          MSGTYP = MSGOFF 
          CALL MPI_SEND(V,6*NUMELS16,MPI_REAL,IT_SPMD(1),MSGTYP,
-     .     MPI_COMM_WORLD,ierror)
+     .     COMM_RADIOSS,ierror)
 
        ELSE
 
@@ -3219,11 +3243,11 @@ Cow Reception du buffer entier des adresses NODGLOB
             MSGTYP = MSGOFF 
 
             CALL MPI_PROBE(IT_SPMD(I),MSGTYP,
-     .                    MPI_COMM_WORLD,STATUS,ierror)
+     .                    COMM_RADIOSS,STATUS,ierror)
 	    CALL MPI_GET_COUNT(STATUS,MPI_INTEGER,SIZ,ierror)
 
             CALL MPI_RECV(XGLOB,SIZ,MPI_REAL,IT_SPMD(I),MSGTYP,
-     .                  MPI_COMM_WORLD,STATUS,ierror)
+     .                  COMM_RADIOSS,STATUS,ierror)
 
             CALL WRITE_R_C(XGLOB,SIZ)
           ENDDO
@@ -3249,7 +3273,8 @@ C-----------------------------------------------
 #include      "implicit_f.inc"
 #include      "r4r8_p.inc"
 #ifdef MPI
-#include      "mpif.h"
+#include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -3282,7 +3307,7 @@ C-----------------------------------------------
        IF (ISPMD.NE.0) THEN
          MSGTYP = MSGOFF
          CALL MPI_SEND(V,3*TV,MPI_REAL,IT_SPMD(1),MSGTYP,
-     .     MPI_COMM_WORLD,ierror)
+     .     COMM_RADIOSS,ierror)
 
        ELSE
 
@@ -3294,11 +3319,11 @@ Cow Reception du buffer entier des adresses NODGLOB
             MSGTYP = MSGOFF
 
             CALL MPI_PROBE(IT_SPMD(I),MSGTYP,
-     .                    MPI_COMM_WORLD,STATUS,ierror)
+     .                    COMM_RADIOSS,STATUS,ierror)
 	    CALL MPI_GET_COUNT(STATUS,MPI_INTEGER,SIZ,ierror)
 
             CALL MPI_RECV(XGLOB,SIZ,MPI_REAL,IT_SPMD(I),MSGTYP,
-     .                  MPI_COMM_WORLD,STATUS,ierror)
+     .                  COMM_RADIOSS,STATUS,ierror)
 
 Cow
            
@@ -3336,6 +3361,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -3380,7 +3406,7 @@ Cow Mise en place des buffers de reception
            MSGTYP = MSGOFF
            CALL MPI_IRECV(
      S      RBUF(L),SIZ,REAL,IT_SPMD(I),MSGTYP,
-     G      MPI_COMM_WORLD,REQ_R(I),IERROR)
+     G      COMM_RADIOSS,REQ_R(I),IERROR)
            L = L+SIZ
          END IF
          IAD_RECV(I+1) = L
@@ -3410,7 +3436,7 @@ C
 
           CALL MPI_ISEND(
      S      SBUF(L),SIZ,REAL,IT_SPMD(I),MSGTYP,
-     G      MPI_COMM_WORLD,REQ_S(I),IERROR)
+     G      COMM_RADIOSS,REQ_S(I),IERROR)
        ENDIF                
       END DO
 Cow Reception et traitement
@@ -3469,6 +3495,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -3512,7 +3539,7 @@ Cow Mise en place des buffers de reception
            MSGTYP = MSGOFF
            CALL MPI_IRECV(
      S      RBUF(L),SIZ,REAL,IT_SPMD(I),MSGTYP,
-     G      MPI_COMM_WORLD,REQ_R(I),IERROR)
+     G      COMM_RADIOSS,REQ_R(I),IERROR)
            L = L+SIZ
          END IF
          IAD_RECV(I+1) = L
@@ -3542,7 +3569,7 @@ C
 
           CALL MPI_ISEND(
      S      SBUF(L),SIZ,REAL,IT_SPMD(I),MSGTYP,
-     G      MPI_COMM_WORLD,REQ_S(I),IERROR)
+     G      COMM_RADIOSS,REQ_S(I),IERROR)
        ENDIF                
       END DO
 ! Reception et traitement
@@ -3594,6 +3621,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -3635,7 +3663,7 @@ Cow Mise en place des buffers de reception
            MSGTYP = MSGOFF
            CALL MPI_IRECV(
      S      RBUF(L),SIZ,MPI_INTEGER,IT_SPMD(I),MSGTYP,
-     G      MPI_COMM_WORLD,REQ_R(I),IERROR)
+     G      COMM_RADIOSS,REQ_R(I),IERROR)
            L = L+SIZ
          END IF
          IAD_RECV(I+1) = L
@@ -3665,7 +3693,7 @@ Cow Mise en place des buffers de reception
 
           CALL MPI_ISEND(
      S      SBUF(L),SIZ,MPI_INTEGER,IT_SPMD(I),MSGTYP,
-     G      MPI_COMM_WORLD,REQ_S(I),IERROR)
+     G      COMM_RADIOSS,REQ_S(I),IERROR)
        ENDIF                
       END DO
 ! Reception et traitement
@@ -3719,6 +3747,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -3764,7 +3793,7 @@ C
             IF (ISPMD.EQ.0) THEN
 C Proc 0 recoit
                CALL MPI_RECV(RBUF, LEN, REAL, IT_SPMD(PMASTER),
-     .                       MSGTAG, MPI_COMM_WORLD, STAT, IERR)
+     .                       MSGTAG, COMM_RADIOSS, STAT, IERR)
 C
                IAD=KRBALE+MONVOL(K1-1+34)
                DO I=1,6*NN
@@ -3786,7 +3815,7 @@ C Proc master envoie
                ENDDO
 C
                CALL MPI_SEND(RBUF, LEN, REAL, IT_SPMD(1),
-     .                       MSGTAG, MPI_COMM_WORLD,  IERR)
+     .                       MSGTAG, COMM_RADIOSS,  IERR)
             ENDIF
             DEALLOCATE(RBUF)             
            ENDIF
@@ -3822,6 +3851,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -3852,7 +3882,7 @@ C
          DO I=1,NSPMD-1
             MSGTYP=MSGOFF
             CALL MPI_IRECV(IDMAXP(I), 1, MPI_INTEGER, IT_SPMD(I+1),
-     .                     MSGTYP, MPI_COMM_WORLD, REQ(I), IERR)
+     .                     MSGTYP, COMM_RADIOSS, REQ(I), IERR)
          ENDDO
          CALL MPI_WAITALL(NSPMD-1, REQ, STAT, IERR)
 C
@@ -3863,7 +3893,7 @@ C
       ELSE
          MSGTYP=MSGOFF
          CALL MPI_ISEND(IDMAXL, 1, MPI_INTEGER, IT_SPMD(1),
-     .                  MSGTYP, MPI_COMM_WORLD, REQ, IERR)
+     .                  MSGTYP, COMM_RADIOSS, REQ, IERR)
          CALL MPI_WAIT(REQ, STAT, IERR)
       ENDIF
 C
@@ -3881,7 +3911,7 @@ C
             ELSE
                MSGTYP=MSGOFF
                CALL MPI_RECV(TAB, 3, MPI_INTEGER, IT_SPMD(PMASTER),
-     .                       MSGTYP, MPI_COMM_WORLD, STAT, IERR)
+     .                       MSGTYP, COMM_RADIOSS, STAT, IERR)
 C
                NFVTR=NFVTR+TAB(1)
                FVOFF(1,I)=NUMNODG+NODCUT+NSECT+NRWALL+NNWL
@@ -3898,7 +3928,7 @@ C
                TAB(2)=FVDATA(I)%NNS_ANIM
                TAB(3)=FVDATA(I)%NPOLH_ANIM
                CALL MPI_SEND(TAB, 3, MPI_INTEGER, IT_SPMD(1),
-     .                       MSGTYP, MPI_COMM_WORLD,  IERR)
+     .                       MSGTYP, COMM_RADIOSS,  IERR)
             ENDIF
          ENDIF
       ENDDO
@@ -3910,7 +3940,7 @@ C
          TAB(4)=NFVSUBS
       ENDIF
       CALL MPI_BCAST(TAB, 4, MPI_INTEGER, IT_SPMD(1),
-     .               MPI_COMM_WORLD, IERR)
+     .               COMM_RADIOSS, IERR)
       IF (ISPMD.NE.0) THEN
          NFVTR=TAB(1)
          NFVNOD=TAB(2)
@@ -3943,6 +3973,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -3980,14 +4011,14 @@ C
             ELSE
                ITAG=MSGOFF
                CALL MPI_RECV(NNS_ANIM, 1, MPI_INTEGER,
-     .                       IT_SPMD(PMASTER), ITAG, MPI_COMM_WORLD,
+     .                       IT_SPMD(PMASTER), ITAG, COMM_RADIOSS,
      .                       STAT, IERR)
 C
                LEN=3*NNS_ANIM
                ALLOCATE(RBUF(LEN))
                ITAG=MSGOFF2
                CALL MPI_RECV(RBUF, LEN, REAL, IT_SPMD(PMASTER),
-     .                       ITAG, MPI_COMM_WORLD, STAT, IERR)
+     .                       ITAG, COMM_RADIOSS, STAT, IERR)
 C
                DO J=1,LEN
                   R4=RBUF(J)
@@ -3999,7 +4030,7 @@ C
             IF (ISPMD.EQ.PMASTER-1) THEN
                ITAG=MSGOFF
                CALL MPI_SEND(FVDATA(I)%NNS_ANIM, 1, MPI_INTEGER,
-     .                       IT_SPMD(1), ITAG, MPI_COMM_WORLD, 
+     .                       IT_SPMD(1), ITAG, COMM_RADIOSS, 
      .                       IERR)
 C
                LEN=3*FVDATA(I)%NNS_ANIM
@@ -4015,7 +4046,7 @@ C
                ENDDO
                ITAG=MSGOFF2
                CALL MPI_SEND(RBUF, LEN, REAL, IT_SPMD(1),
-     .                       ITAG, MPI_COMM_WORLD,  IERR)
+     .                       ITAG, COMM_RADIOSS,  IERR)
 C
                DEALLOCATE(RBUF)
             ENDIF
@@ -4048,6 +4079,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -4117,13 +4149,13 @@ C
             ELSE
                ITAG=MSGOFF
                CALL MPI_RECV(NNTR, 1, MPI_INTEGER, IT_SPMD(PMASTER),
-     .                       ITAG, MPI_COMM_WORLD, STAT, IERR)
+     .                       ITAG, COMM_RADIOSS, STAT, IERR)
 C
                LEN=6*NNTR
                ALLOCATE(IBUF(LEN))
                ITAG=MSGOFF+1
                CALL MPI_RECV(IBUF, LEN, MPI_INTEGER, IT_SPMD(PMASTER),
-     .                       ITAG, MPI_COMM_WORLD, STAT, IERR)
+     .                       ITAG, COMM_RADIOSS, STAT, IERR)
 C
                JJ=0
                DO J=1,NNTR
@@ -4157,7 +4189,7 @@ C
             IF (ISPMD.EQ.PMASTER-1) THEN
                ITAG=MSGOFF
                CALL MPI_SEND(FVDATA(I)%NNTR, 1, MPI_INTEGER,
-     .                       IT_SPMD(1), ITAG, MPI_COMM_WORLD,
+     .                       IT_SPMD(1), ITAG, COMM_RADIOSS,
      .                       IERR)
 C
                LEN=6*FVDATA(I)%NNTR
@@ -4198,7 +4230,7 @@ C
                ENDDO
                ITAG=MSGOFF+1
                CALL MPI_SEND(IBUF, LEN, MPI_INTEGER, IT_SPMD(1),
-     .                       ITAG, MPI_COMM_WORLD, IERR)
+     .                       ITAG, COMM_RADIOSS, IERR)
 C
                DEALLOCATE(IBUF, ITAGT)
             ENDIF
@@ -4230,6 +4262,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -4287,13 +4320,13 @@ C
             ELSE
                ITAG=MSGOFF
                CALL MPI_RECV(NNTR, 1, MPI_INTEGER, IT_SPMD(PMASTER),
-     .                       ITAG, MPI_COMM_WORLD, STAT, IERR)
+     .                       ITAG, COMM_RADIOSS, STAT, IERR)
 C
                LEN=2*NNTR
                ALLOCATE(IBUF(LEN), OFFTR(NNTR))
                ITAG=MSGOFF2
                CALL MPI_RECV(IBUF, LEN, MPI_INTEGER, IT_SPMD(PMASTER),
-     .                       ITAG, MPI_COMM_WORLD, STAT, IERR)
+     .                       ITAG, COMM_RADIOSS, STAT, IERR)
 C
                DO J=1,NNTR
                   OFFTR(J)=0
@@ -4315,7 +4348,7 @@ C
             IF (ISPMD.EQ.PMASTER-1) THEN
                ITAG=MSGOFF
                CALL MPI_SEND(FVDATA(I)%NNTR, 1, MPI_INTEGER,
-     .                       IT_SPMD(1), ITAG, MPI_COMM_WORLD,
+     .                       IT_SPMD(1), ITAG, COMM_RADIOSS,
      .                       IERR)
 C
                LEN=2*FVDATA(I)%NNTR
@@ -4351,7 +4384,7 @@ C
                ENDDO
                ITAG=MSGOFF2
                CALL MPI_SEND(IBUF, LEN, MPI_INTEGER, IT_SPMD(1),
-     .                       ITAG, MPI_COMM_WORLD,  IERR)
+     .                       ITAG, COMM_RADIOSS,  IERR)
 C
                DEALLOCATE(IBUF, ITAGT)              
             ENDIF
@@ -4383,6 +4416,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -4436,13 +4470,13 @@ C
             ELSE
                ITAG=MSGOFF
                CALL MPI_RECV(NPOLH_ANIM, 1, MPI_INTEGER, 
-     .                       IT_SPMD(PMASTER), ITAG, MPI_COMM_WORLD,
+     .                       IT_SPMD(PMASTER), ITAG, COMM_RADIOSS,
      .                       STAT, IERR)
 C
                ALLOCATE(IBUF(NPOLH_ANIM))
                ITAG=MSGOFF2
                CALL MPI_RECV(IBUF, NPOLH_ANIM, MPI_INTEGER,
-     .                       IT_SPMD(PMASTER), ITAG, MPI_COMM_WORLD,
+     .                       IT_SPMD(PMASTER), ITAG, COMM_RADIOSS,
      .                       STAT, IERR)
 C
                DO J=1,NPOLH_ANIM
@@ -4456,7 +4490,7 @@ C
             IF (ISPMD.EQ.PMASTER-1) THEN
                ITAG=MSGOFF
                CALL MPI_SEND(FVDATA(I)%NPOLH_ANIM, 1, MPI_INTEGER,
-     .                       IT_SPMD(1), ITAG, MPI_COMM_WORLD,
+     .                       IT_SPMD(1), ITAG, COMM_RADIOSS,
      .                       IERR)
 C
                ALLOCATE(IBUF(FVDATA(I)%NPOLH_ANIM), 
@@ -4484,7 +4518,7 @@ C
                ENDDO
                ITAG=MSGOFF2
                CALL MPI_SEND(IBUF, FVDATA(I)%NPOLH_ANIM, MPI_INTEGER,
-     .                       IT_SPMD(1), ITAG, MPI_COMM_WORLD,
+     .                       IT_SPMD(1), ITAG, COMM_RADIOSS,
      .                        IERR)
 C
                DEALLOCATE(IBUF, ITAGT)                              
@@ -4517,6 +4551,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -4556,7 +4591,7 @@ C
             ELSE
                ITAG=MSGOFF
                CALL MPI_RECV(NPOLH_ANIM, 1, MPI_INTEGER,
-     .                       IT_SPMD(PMASTER), ITAG, MPI_COMM_WORLD,
+     .                       IT_SPMD(PMASTER), ITAG, COMM_RADIOSS,
      .                       STAT, IERR)
                DO J=1,NPOLH_ANIM
                   WRITE(STR,'(I8,A1)') J+MAXPART,':'
@@ -4576,7 +4611,7 @@ C
             IF (ISPMD.EQ.PMASTER-1) THEN
                ITAG=MSGOFF
                CALL MPI_SEND(FVDATA(I)%NPOLH_ANIM, 1, MPI_INTEGER,
-     .                       IT_SPMD(1), ITAG, MPI_COMM_WORLD,
+     .                       IT_SPMD(1), ITAG, COMM_RADIOSS,
      .                       IERR)
             ENDIF
          ENDIF
@@ -4609,6 +4644,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -4680,13 +4716,13 @@ C
             ELSE
                ITAG=MSGOFF
                CALL MPI_RECV(NNTR, 1, MPI_INTEGER, IT_SPMD(PMASTER),
-     .                       ITAG, MPI_COMM_WORLD, STAT, IERR)
+     .                       ITAG, COMM_RADIOSS, STAT, IERR)
 C
                LEN=10*NNTR
                ALLOCATE(RBUF(LEN))
                ITAG=MSGOFF2
                CALL MPI_RECV(RBUF, LEN, REAL, IT_SPMD(PMASTER),
-     .                       ITAG, MPI_COMM_WORLD, STAT, IERR)
+     .                       ITAG, COMM_RADIOSS, STAT, IERR)
 C
                DO J=1,NNTR
                   NN=FVEL2FA(ELOFF+J)
@@ -4709,7 +4745,7 @@ C
                NNTR=FVDATA(I)%NNTR
                ITAG=MSGOFF
                CALL MPI_SEND(NNTR, 1, MPI_INTEGER, IT_SPMD(1),
-     .                       ITAG, MPI_COMM_WORLD, IERR)
+     .                       ITAG, COMM_RADIOSS, IERR)
 C
                LEN=10*NNTR
                ALLOCATE(RBUF(LEN))
@@ -4759,7 +4795,7 @@ C
                ENDDO
                ITAG=MSGOFF2
                CALL MPI_SEND(RBUF, LEN, REAL, IT_SPMD(1),
-     .                       ITAG, MPI_COMM_WORLD, IERR)
+     .                       ITAG, COMM_RADIOSS, IERR)
 C
                DEALLOCATE(RBUF)        
             ENDIF
@@ -4791,6 +4827,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -4894,13 +4931,13 @@ C
             ELSE
                ITAG=MSGOFF
                CALL MPI_RECV(NNS_ANIM, 1, MPI_INTEGER, IT_SPMD(PMASTER),
-     .                       ITAG, MPI_COMM_WORLD, STAT, IERR)
+     .                       ITAG, COMM_RADIOSS, STAT, IERR)
 C
                ALLOCATE(VV(3,NNS_ANIM))
                ITAG=MSGOFF2
                LEN=3*NNS_ANIM
                CALL MPI_RECV(VV, LEN, REAL, IT_SPMD(PMASTER),
-     .                       ITAG, MPI_COMM_WORLD, STAT, IERR)
+     .                       ITAG, COMM_RADIOSS, STAT, IERR)
 C
                DO J=1,NNS_ANIM
                   R4 = VV(1,J)
@@ -4918,7 +4955,7 @@ C
                NNS_ANIM=FVDATA(I)%NNS_ANIM
                ITAG=MSGOFF
                CALL MPI_SEND(NNS_ANIM, 1, MPI_INTEGER, IT_SPMD(1),
-     .                       ITAG, MPI_COMM_WORLD, IERR)
+     .                       ITAG, COMM_RADIOSS, IERR)
 C
                NNTR=FVDATA(I)%NNTR
                ALLOCATE(VTR(3,NNTR), VV(3,NNS_ANIM), NPTR(NNTR),
@@ -4988,7 +5025,7 @@ C
                ITAG=MSGOFF2
                LEN=3*NNS_ANIM
                CALL MPI_SEND(VV, LEN, REAL, IT_SPMD(1),
-     .                       ITAG, MPI_COMM_WORLD,  IERR)
+     .                       ITAG, COMM_RADIOSS,  IERR)
 C
                DEALLOCATE(VTR, VV, NPTR, NPN)
             ENDIF
@@ -5029,6 +5066,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -5059,7 +5097,7 @@ C
             ELSE
                ITAG=MSGOFF
                CALL MPI_RECV(NNS_ANIM, 1, MPI_INTEGER, IT_SPMD(PMASTER),
-     .                       ITAG, MPI_COMM_WORLD, STAT, IERR)
+     .                       ITAG, COMM_RADIOSS, STAT, IERR)
 C
                DO J=1,NNS_ANIM
                   JJ=FVOFF(2,I)+J
@@ -5070,7 +5108,7 @@ C
             IF (ISPMD.EQ.PMASTER-1) THEN
                ITAG=MSGOFF
                CALL MPI_SEND(FVDATA(I)%NNS_ANIM, 1, MPI_INTEGER,
-     .                       IT_SPMD(1), ITAG, MPI_COMM_WORLD,
+     .                       IT_SPMD(1), ITAG, COMM_RADIOSS,
      .                       IERR)
             ENDIF
          ENDIF
@@ -5106,6 +5144,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -5138,7 +5177,7 @@ C
             ELSE
                ITAG=MSGOFF
                CALL MPI_RECV(NPOLH_ANIM, 1, MPI_INTEGER,
-     .                       IT_SPMD(PMASTER), ITAG, MPI_COMM_WORLD,
+     .                       IT_SPMD(PMASTER), ITAG, COMM_RADIOSS,
      .                       STAT, IERR)
                DO J=1,NPOLH_ANIM
                   FVPBUF(IADP+J)=II-1
@@ -5149,7 +5188,7 @@ C
             IF (ISPMD.EQ.PMASTER-1) THEN
                ITAG=MSGOFF
                CALL MPI_SEND(FVDATA(I)%NPOLH_ANIM, 1, MPI_INTEGER,
-     .                       IT_SPMD(1), ITAG, MPI_COMM_WORLD,
+     .                       IT_SPMD(1), ITAG, COMM_RADIOSS,
      .                       IERR)
             ENDIF
          ENDIF
@@ -5179,6 +5218,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -5203,7 +5243,7 @@ C
             IF (ISPMD.NE.PMASTER-1) THEN
                ITAG=MSGOFF
                CALL MPI_RECV(TAB, 2, MPI_INTEGER, IT_SPMD(PMASTER),
-     .                       ITAG, MPI_COMM_WORLD, STAT, IERR)
+     .                       ITAG, COMM_RADIOSS, STAT, IERR)
 C
                FVDATA(I)%ID=TAB(1)
                FVDATA(I)%NPOLH_ANIM=TAB(2)
@@ -5215,7 +5255,7 @@ C
 C
                ITAG=MSGOFF
                CALL MPI_SEND(TAB, 2, MPI_INTEGER, IT_SPMD(1),
-     .                       ITAG, MPI_COMM_WORLD,  IERR)
+     .                       ITAG, COMM_RADIOSS,  IERR)
             ENDIF
          ENDIF
       ENDDO  
@@ -5239,6 +5279,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -5263,7 +5304,7 @@ C
          DO I=1,NSPMD-1
             ITAG=MSGOFF
             CALL MPI_IRECV(IDCMAXP(I), 1, MPI_INTEGER, IT_SPMD(I+1),
-     .                     ITAG, MPI_COMM_WORLD, REQ(I), IERR)
+     .                     ITAG, COMM_RADIOSS, REQ(I), IERR)
          ENDDO
          CALL MPI_WAITALL(NSPMD-1, REQ, STAT, IERR)
 C         
@@ -5274,7 +5315,7 @@ C
       ELSE
          ITAG=MSGOFF
          CALL MPI_ISEND(IDCMAXL, 1, MPI_INTEGER, IT_SPMD(1),
-     .                  ITAG, MPI_COMM_WORLD, REQ, IERR)
+     .                  ITAG, COMM_RADIOSS, REQ, IERR)
          CALL MPI_WAIT(REQ, STAT, IERR)
       ENDIF
 C
@@ -5303,6 +5344,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -5324,7 +5366,7 @@ C-----------------------------------------------
 
       PMASTER=FVSPMD(IFV)%PMASTER
       CALL MPI_BCAST(VECTOR, LEN, REAL, PMASTER-1,
-     .               MPI_COMM_WORLD, IERR)
+     .               COMM_RADIOSS, IERR)
 
 #endif MPI
       RETURN
@@ -5350,6 +5392,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -5396,13 +5439,13 @@ C PROC 0, RECEIVE NODES NUM for each ply
            DO P=2,NSPMD
               ITAG=MSGOFF
               CALL MPI_RECV(RECSZ,1, MPI_INTEGER, IT_SPMD(P),
-     .                      ITAG, MPI_COMM_WORLD, STAT, IERR)
+     .                      ITAG, COMM_RADIOSS, STAT, IERR)
               PLYIADNOD(I,P) = RECSZ
            ENDDO
         ELSE
            ITAG=MSGOFF
            CALL MPI_SEND(PLYNOD(I)%PLYNUMNODS,1,MPI_INTEGER,IT_SPMD(1),
-     .                   ITAG,MPI_COMM_WORLD,IERR)
+     .                   ITAG,COMM_RADIOSS,IERR)
         ENDIF
       ENDDO
 
@@ -5433,6 +5476,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -5506,10 +5550,10 @@ C Les plynods des autres procs
               ALLOCATE(FRECBUF(3,PLYIADNOD(IPLY,P)))
               ITAG=MSGOFF
               CALL MPI_RECV(IRECBUF,PLYIADNOD(IPLY,P), MPI_INTEGER,
-     .                      IT_SPMD(P),ITAG, MPI_COMM_WORLD, STAT, IERR)
+     .                      IT_SPMD(P),ITAG, COMM_RADIOSS, STAT, IERR)
               ITAG=MSGOFF2
               CALL MPI_RECV(FRECBUF,PLYIADNOD(IPLY,P)*3, REAL,
-     .                      IT_SPMD(P),ITAG, MPI_COMM_WORLD, STAT, IERR)
+     .                      IT_SPMD(P),ITAG, COMM_RADIOSS, STAT, IERR)
               DO I=1,PLYIADNOD(IPLY,P)
                  EMPL = IRECBUF(I)-EMPSIZPL
                  WRTBUF(1,EMPL)=FRECBUF(1,I)
@@ -5543,11 +5587,11 @@ C Les plynods des autres procs
          END DO
          ITAG=MSGOFF
          CALL MPI_SEND(ISENDBUF,PLYSIZ,MPI_INTEGER,IT_SPMD(1),
-     .                   ITAG,MPI_COMM_WORLD,IERR)
+     .                   ITAG,COMM_RADIOSS,IERR)
 
          ITAG=MSGOFF2
          CALL MPI_SEND(FSENDBUF,PLYSIZ*3,REAL,IT_SPMD(1),
-     .                   ITAG,MPI_COMM_WORLD,IERR)
+     .                   ITAG,COMM_RADIOSS,IERR)
 C
          DEALLOCATE(ISENDBUF,FSENDBUF)
         ENDIF
@@ -5585,6 +5629,7 @@ C-----------------------------------------------
 
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 
 C-----------------------------------------------
@@ -5621,7 +5666,7 @@ C-----------------------------------------------
         MSGTYP=MSGOFF
 
         CALL MPI_SEND(NP,NBF_L,MPI_INTEGER,IT_SPMD(1),MSGTYP,
-     .                MPI_COMM_WORLD,ierror)
+     .                COMM_RADIOSS,ierror)
 
       ELSE
         DO K=1,NBF_L
@@ -5635,11 +5680,11 @@ C
         MSGTYP=MSGOFF
 
          CALL MPI_PROBE(IT_SPMD(K),MSGTYP,
-     .                   MPI_COMM_WORLD,STATUS,ierror)
+     .                   COMM_RADIOSS,STATUS,ierror)
          CALL MPI_GET_COUNT(STATUS,MPI_INTEGER,NB_TMP,ierror)
 
          CALL MPI_RECV(RBUF(IDEB),NB_TMP,MPI_INTEGER,IT_SPMD(K),MSGTYP,
-     .                  MPI_COMM_WORLD,STATUS,ierror)
+     .                  COMM_RADIOSS,STATUS,ierror)
 
         IDEB = IDEB + NB_TMP
         END DO
@@ -5693,6 +5738,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -5767,11 +5813,11 @@ C Les plynods des autres procs
               ITAG=MSGOFF
 
               CALL MPI_RECV(IRECBUF,PLYIADNOD(IPLY,P), MPI_INTEGER,
-     .                      IT_SPMD(P),ITAG, MPI_COMM_WORLD, STAT, IERR)
+     .                      IT_SPMD(P),ITAG, COMM_RADIOSS, STAT, IERR)
 
               ITAG=MSGOFF2
               CALL MPI_RECV(FRECBUF,PLYIADNOD(IPLY,P)*3, MPI_INTEGER,
-     .                      IT_SPMD(P),ITAG, MPI_COMM_WORLD, STAT, IERR)
+     .                      IT_SPMD(P),ITAG, COMM_RADIOSS, STAT, IERR)
 
               DO I=1,PLYIADNOD(IPLY,P)
                  EMPL = IRECBUF(I)-EMPSIZPL
@@ -5815,11 +5861,11 @@ C Les plynods des autres procs
 
         ITAG=MSGOFF
         CALL MPI_SEND(ISENDBUF,PLYSIZ,MPI_INTEGER,IT_SPMD(1),
-     .                   ITAG,MPI_COMM_WORLD,IERR)
+     .                   ITAG,COMM_RADIOSS,IERR)
 
         ITAG=MSGOFF2
         CALL MPI_SEND(FSENDBUF,PLYSIZ*3,MPI_INTEGER,IT_SPMD(1),
-     .                   ITAG,MPI_COMM_WORLD,IERR)
+     .                   ITAG,COMM_RADIOSS,IERR)
 C
         DEALLOCATE(ISENDBUF,FSENDBUF)
       ENDIF
@@ -5851,6 +5897,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -5925,10 +5972,10 @@ C Les plynods des autres procs
               ALLOCATE(FRECBUF(3,PLYIADNOD(IPLY,P)))
               ITAG=MSGOFF
               CALL MPI_RECV(IRECBUF,PLYIADNOD(IPLY,P), MPI_INTEGER,
-     .                      IT_SPMD(P),ITAG, MPI_COMM_WORLD, STAT, IERR)
+     .                      IT_SPMD(P),ITAG, COMM_RADIOSS, STAT, IERR)
               ITAG=MSGOFF2
               CALL MPI_RECV(FRECBUF,PLYIADNOD(IPLY,P)*3, REAL,
-     .                      IT_SPMD(P),ITAG, MPI_COMM_WORLD, STAT, IERR)
+     .                      IT_SPMD(P),ITAG, COMM_RADIOSS, STAT, IERR)
 
               DO I=1,PLYIADNOD(IPLY,P)
                  EMPL = IRECBUF(I)-EMPSIZPL
@@ -5976,11 +6023,11 @@ C Les plynods des autres procs
 
          ITAG=MSGOFF
          CALL MPI_SEND(ISENDBUF,PLYSIZ,MPI_INTEGER,IT_SPMD(1),
-     .                   ITAG,MPI_COMM_WORLD,IERR)
+     .                   ITAG,COMM_RADIOSS,IERR)
 
          ITAG=MSGOFF2
          CALL MPI_SEND(FSENDBUF,PLYSIZ*3,REAL,IT_SPMD(1),
-     .                   ITAG,MPI_COMM_WORLD,IERR)
+     .                   ITAG,COMM_RADIOSS,IERR)
 C
          DEALLOCATE(ISENDBUF,FSENDBUF)
         ENDIF
@@ -6010,6 +6057,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -6032,7 +6080,7 @@ C-----------------------------------------------
       IF (LEN .GT. 0) THEN
         CALL MPI_REDUCE(V,VTMP,LEN,
      .                  MPI_INTEGER,MPI_MAX,IT_SPMD(1),
-     .                  MPI_COMM_WORLD,IERROR)
+     .                  COMM_RADIOSS,IERROR)
       ENDIF
       IF (ISPMD.EQ.0) THEN
         DO I=1,LEN
@@ -6060,6 +6108,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -6089,7 +6138,7 @@ C-----------------------------------------------
          DO I=1,NSPMD-1
             ITAG=MSGOFF
             CALL MPI_IRECV(IDMAXP(I), 1, MPI_INTEGER, IT_SPMD(I+1),
-     .                     ITAG, MPI_COMM_WORLD, REQ(I), IERR)
+     .                     ITAG, COMM_RADIOSS, REQ(I), IERR)
          ENDDO
          CALL MPI_WAITALL(NSPMD-1, REQ, STAT, IERR)
 C
@@ -6100,7 +6149,7 @@ C
       ELSE
          ITAG=MSGOFF
          CALL MPI_ISEND(IDMAXL, 1, MPI_INTEGER, IT_SPMD(1),
-     .                  ITAG, MPI_COMM_WORLD, REQ, IERR)
+     .                  ITAG, COMM_RADIOSS, REQ, IERR)
          CALL MPI_WAIT(REQ, STAT, IERR)
       ENDIF
 C
@@ -6126,6 +6175,7 @@ C-----------------------------------------------
 #include      "r4r8_p.inc"
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -6176,11 +6226,11 @@ Cow de noeuds au max
 C
          MSGTYP = MSGOFF2 
          CALL MPI_SEND(IBUF,SIZ,MPI_INTEGER,IT_SPMD(1),MSGTYP,
-     .                 MPI_COMM_WORLD,ierror)
+     .                 COMM_RADIOSS,ierror)
 Cow
          MSGTYP = MSGOFF
          CALL MPI_SEND(BUFSR,3*SIZ,MPI_REAL4,IT_SPMD(1),MSGTYP,
-     .                 MPI_COMM_WORLD,ierror)
+     .                 COMM_RADIOSS,ierror)
        ELSE
            STEP = 0
 C
@@ -6202,17 +6252,17 @@ C------------
 Cow Reception du buffer entier des adresses NODGLOB
             MSGTYP = MSGOFF2
             CALL MPI_PROBE(IT_SPMD(I),MSGTYP,
-     .                     MPI_COMM_WORLD,STATUS,ierror)
+     .                     COMM_RADIOSS,STATUS,ierror)
 	    CALL MPI_GET_COUNT(STATUS,MPI_INTEGER,SIZ,ierror)
             CALL MPI_RECV(IBUF,SIZ,MPI_INTEGER,IT_SPMD(I),MSGTYP,
-     .                    MPI_COMM_WORLD,STATUS,ierror)
+     .                    COMM_RADIOSS,STATUS,ierror)
 c
 Cow Reception du buffer flottant des adresses NODGLOB
 c
             MSGTYP2 = MSGOFF
 c
             CALL MPI_RECV(BUFSR,SIZ*3,MPI_REAL4,IT_SPMD(I),MSGTYP2,
-     .                    MPI_COMM_WORLD,STATUS,ierror)
+     .                    COMM_RADIOSS,STATUS,ierror)
 c
             NREC = SIZ 
 c
@@ -6270,6 +6320,7 @@ C-----------------------------------------------
 #include      "r4r8_p.inc"
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -6341,7 +6392,7 @@ Cow de noeuds au max
 
          MSGTYP = MSGOFF2
          CALL MPI_SEND(IBUF,4*SIZ,MPI_INTEGER,IT_SPMD(1),MSGTYP,
-     .     MPI_COMM_WORLD,ierror)
+     .     COMM_RADIOSS,ierror)
 
        ELSE
 
@@ -6377,11 +6428,11 @@ c           RNGLOB(3,NG) = XN3
             MSGTYP = MSGOFF2
 
             CALL MPI_PROBE(IT_SPMD(I),MSGTYP,
-     .                    MPI_COMM_WORLD,STATUS,ierror)
+     .                    COMM_RADIOSS,STATUS,ierror)
 	    CALL MPI_GET_COUNT(STATUS,MPI_INTEGER,SIZ,ierror)
 
             CALL MPI_RECV(IBUF,SIZ,MPI_INTEGER,IT_SPMD(I),MSGTYP,
-     .                  MPI_COMM_WORLD,STATUS,ierror)
+     .                  COMM_RADIOSS,STATUS,ierror)
 
             NREC = SIZ / 4
 
@@ -6430,6 +6481,7 @@ C-----------------------------------------------
 #include      "r4r8_p.inc"
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -6472,7 +6524,7 @@ C-----------------------------------------------
 C
          MSGTYP = MSGOFF
          CALL MPI_SEND(IBUF,2*SIZ,MPI_INTEGER,IT_SPMD(1),MSGTYP,
-     .                 MPI_COMM_WORLD,ierror)
+     .                 COMM_RADIOSS,ierror)
        ELSE
 C proc 0 
        STEP = 0
@@ -6487,10 +6539,10 @@ C all the rest procs
 Cow Reception du buffer entier des adresses NODGLOB
           MSGTYP = MSGOFF 
           CALL MPI_PROBE(IT_SPMD(I),MSGTYP,
-     .                   MPI_COMM_WORLD,STATUS,ierror)
+     .                   COMM_RADIOSS,STATUS,ierror)
 	  CALL MPI_GET_COUNT(STATUS,MPI_INTEGER,SIZ,ierror)
           CALL MPI_RECV(IBUF,SIZ,MPI_INTEGER,IT_SPMD(I),MSGTYP,
-     .                  MPI_COMM_WORLD,STATUS,ierror)
+     .                  COMM_RADIOSS,STATUS,ierror)
 C         
           NREC = SIZ/2
           DO K = 1, NREC
@@ -6529,6 +6581,7 @@ C-----------------------------------------------
 #include      "r4r8_p.inc"
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -6572,7 +6625,7 @@ C-----------------------------------------------
         IF(MODE==0) THEN
         !       collect the local index arrays on the master processor
                 CALL MPI_GATHER(SINDEX,3*(NSECT+1),MPI_INTEGER,
-     .                   RINDEX_PROC,3*(NSECT+1),MPI_INTEGER,0,MPI_COMM_WORLD,ierror)  
+     .                   RINDEX_PROC,3*(NSECT+1),MPI_INTEGER,0,COMM_RADIOSS,ierror)  
         !       sum all the size of local sended arrays in order to get the size 
         !       of the global array on proc 0                  
                 IF(ISPMD==0) THEN
@@ -6593,7 +6646,7 @@ C-----------------------------------------------
 
                 CALL MPI_GATHERV(BUFFER_S,SIZE_BUFFER_S,MPI_INTEGER,
      .                           BUFFER_R,NB_ELEM_R,SHIFT_R,MPI_INTEGER,
-     .                           0,MPI_COMM_WORLD,ierror)   
+     .                           0,COMM_RADIOSS,ierror)   
         ENDIF
 #endif
        RETURN

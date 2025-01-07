@@ -44,6 +44,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -113,13 +114,13 @@ C
             ELSE
                ITAG=MSGOFF
                CALL MPI_RECV(NNTR, 1, MPI_INTEGER, IT_SPMD(PMAIN),
-     .                       ITAG, MPI_COMM_WORLD, STAT, IERR)
+     .                       ITAG, COMM_RADIOSS, STAT, IERR)
 C
                LEN=6*NNTR
                ALLOCATE(IBUF(LEN))
                ITAG=MSGOFF+1
                CALL MPI_RECV(IBUF, LEN, MPI_INTEGER, IT_SPMD(PMAIN),
-     .                       ITAG, MPI_COMM_WORLD, STAT, IERR)
+     .                       ITAG, COMM_RADIOSS, STAT, IERR)
 C
                JJ=0
                DO J=1,NNTR
@@ -153,7 +154,7 @@ C
             IF (ISPMD==PMAIN-1) THEN
                ITAG=MSGOFF
                CALL MPI_SEND(FVDATA(I)%NNTR, 1, MPI_INTEGER,
-     .                       IT_SPMD(1), ITAG, MPI_COMM_WORLD,
+     .                       IT_SPMD(1), ITAG, COMM_RADIOSS,
      .                       IERR)
 C
                LEN=6*FVDATA(I)%NNTR
@@ -194,7 +195,7 @@ C
                ENDDO
                ITAG=MSGOFF+1
                CALL MPI_SEND(IBUF, LEN, MPI_INTEGER, IT_SPMD(1),
-     .                       ITAG, MPI_COMM_WORLD, IERR)
+     .                       ITAG, COMM_RADIOSS, IERR)
 C
                DEALLOCATE(IBUF, ITAGT)
             ENDIF

@@ -46,6 +46,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -101,25 +102,25 @@ C-----------------------------------------------
         MSGTYP=MSGOFF0
         CALL MPI_SEND(SDNODG,N,MPI_INTEGER,
      .                IT_SPMD(1),MSGTYP,
-     .                MPI_COMM_WORLD,IERROR)
+     .                COMM_RADIOSS,IERROR)
         MSGTYP=MSGOFF
         CALL MPI_SEND(AGLOB,2*N,MPI_DOUBLE_PRECISION,
      .                IT_SPMD(1),MSGTYP,
-     .                MPI_COMM_WORLD,IERROR)
+     .                COMM_RADIOSS,IERROR)
       ELSE
 
         DO K=2,NSPMD
             MSGTYP=MSGOFF0
             CALL MPI_RECV(SDNODG,NUMNODM,MPI_INTEGER,
      .                    IT_SPMD(K),MSGTYP,
-     .                    MPI_COMM_WORLD,STATUS,IERROR)
+     .                    COMM_RADIOSS,STATUS,IERROR)
 
             CALL MPI_GET_COUNT(STATUS,MPI_INTEGER,N,ierror)
 
             MSGTYP=MSGOFF
             CALL MPI_RECV(AGLOB,2*N,MPI_DOUBLE_PRECISION,
      .                    IT_SPMD(K),MSGTYP,
-     .                    MPI_COMM_WORLD,STATUS,IERROR)
+     .                    COMM_RADIOSS,STATUS,IERROR)
 
 
             DO I=1,N

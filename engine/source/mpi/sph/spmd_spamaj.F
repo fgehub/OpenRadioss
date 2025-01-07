@@ -42,6 +42,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -76,7 +77,7 @@ C-----------------------------------------------
 !      -----------------------
 !      allreduce with MIN and MAX operation
        call MPI_AllReduce(SBUF, RBUF, 2, REAL , MPI_MAX,
-     &                    MPI_COMM_WORLD, ierror)
+     &                    COMM_RADIOSS, ierror)
 !      -----------------------
 
        IREDUCE = nint(RBUF(1))

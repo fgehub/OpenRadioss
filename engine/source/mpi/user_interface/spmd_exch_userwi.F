@@ -42,6 +42,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -93,7 +94,7 @@ C-----------------------------------------------
            IF(NUM > 0)THEN
              MSGTYP=MSGOFF
              CALL MPI_SEND(SBUF(1,IAD),6*NUM,REAL,IT_SPMD(P),MSGTYP,
-     .                MPI_COMM_WORLD,ierror)
+     .                COMM_RADIOSS,ierror)
            ENDIF
         ENDDO
         DEALLOCATE(SBUF)
@@ -103,7 +104,7 @@ C-----------------------------------------------
         IF(NUM > 0)THEN
           MSGTYP = MSGOFF
           CALL MPI_RECV(RBUF,6*NUM,REAL,IT_SPMD(1),MSGTYP,
-     .                MPI_COMM_WORLD,STATUS,IERROR)
+     .                COMM_RADIOSS,STATUS,IERROR)
           DO I=1,NUM
             ND=USER_WINDOWS%FR_USERW(I)
             A(1,ND)=A(1,ND)+RBUF(1,I)

@@ -50,6 +50,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -106,7 +107,7 @@ C-----------------------------------------------
                             SORT_COMM(NIN)%NBRECV_NB=SORT_COMM(NIN)%NBRECV_NB+1
                             SORT_COMM(NIN)%RECV_NB(SORT_COMM(NIN)%NBRECV_NB)=P   !   proc with nmn>0
                             CALL MPI_IRECV(NSNFI(NIN)%P(P),1,MPI_INTEGER,IT_SPMD(P),
-     .                              MSGTYP,MPI_COMM_WORLD,SORT_COMM(NIN)%REQUEST_NB_R(SORT_COMM(NIN)%NBRECV_NB),IERROR)
+     .                              MSGTYP,COMM_RADIOSS,SORT_COMM(NIN)%REQUEST_NB_R(SORT_COMM(NIN)%NBRECV_NB),IERROR)
                         ENDIF
                     ENDIF
                 ENDIF

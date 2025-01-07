@@ -45,6 +45,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -94,7 +95,7 @@ C ----------
           IF(SIZ > 0) THEN 
            CALL MPI_IRECV(
      S      REC_BUF(L),2*SIZ,REAL,IT_SPMD(P),MSGTYP,
-     G      MPI_COMM_WORLD,REQ_R(P),IERROR)
+     G      COMM_RADIOSS,REQ_R(P),IERROR)
             L=L+2*SIZ
           ENDIF
        ENDDO
@@ -116,7 +117,7 @@ C -----------------
          
            CALL MPI_ISEND(
      S       SEND_BUF(IAD),2*SIZ,REAL,IT_SPMD(P),MSGTYP,
-     G       MPI_COMM_WORLD,REQ_S(P),IERROR)
+     G       COMM_RADIOSS,REQ_S(P),IERROR)
      
          ENDIF
        ENDDO

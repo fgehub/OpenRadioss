@@ -637,6 +637,7 @@ C   C o m m o n   B l o c k s
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   L o c a l   V a r i a b l e s
@@ -652,12 +653,12 @@ C-----------------------------------------------
         KEY = 0
         call MPI_INITIALIZED(KEY, IERR)
         CALL MPI_INIT(IERROR)
-        CALL MPI_COMM_SIZE(MPI_COMM_WORLD, NNODES, IERROR)
-        CALL MPI_COMM_RANK(MPI_COMM_WORLD, MYRANK, IERROR)
+        CALL MPI_COMM_SIZE(COMM_RADIOSS, NNODES, IERROR)
+        CALL MPI_COMM_RANK(COMM_RADIOSS, MYRANK, IERROR)
 
         if (MYRANK==0) CALL PREXECINFO(IDUM)
         
-        CALL MPI_BARRIER(MPI_COMM_WORLD,IERROR)
+        CALL MPI_BARRIER(COMM_RADIOSS,IERROR)
 
         CALL MPI_FINALIZE(IERROR)
 
@@ -732,6 +733,7 @@ C   C o m m o n   B l o c k s
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   D u m m y   A r g u m e n t s
@@ -751,12 +753,12 @@ C-----------------------------------------------
         KEY = 0
         call MPI_INITIALIZED(KEY, IERR)
         CALL MPI_INIT(IERROR)
-        CALL MPI_COMM_SIZE(MPI_COMM_WORLD, NNODES, IERROR)
-        CALL MPI_COMM_RANK(MPI_COMM_WORLD, MYRANK, IERROR)
+        CALL MPI_COMM_SIZE(COMM_RADIOSS, NNODES, IERROR)
+        CALL MPI_COMM_RANK(COMM_RADIOSS, MYRANK, IERROR)
 
         if (MYRANK==0) CALL PRHELPINFO(ERRN,EMSG,SMSG)
         
-        CALL MPI_BARRIER(MPI_COMM_WORLD,IERROR)
+        CALL MPI_BARRIER(COMM_RADIOSS,IERROR)
 
         CALL MPI_FINALIZE(IERROR)
 

@@ -61,6 +61,7 @@
 #include "my_real.inc"
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 ! ----------------------------------------------------------------------------------------------------------------------
 !                                                   arguments

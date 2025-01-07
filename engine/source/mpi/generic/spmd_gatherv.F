@@ -36,6 +36,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -62,7 +63,7 @@ C-----------------------------------------------
 !       mpi comm gahterv on processor PROC
         CALL MPI_GATHERV(SENDBUF,SEND_SIZE,REAL,
      .                   RECVBUF,RCV_SIZE,DIPLS,REAL,
-     .                   PROC,MPI_COMM_WORLD,error)
+     .                   PROC,COMM_RADIOSS,error)
 !       ------------------
 
 #else

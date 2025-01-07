@@ -100,6 +100,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C     D u m m y   A r g u m e n t s
@@ -147,7 +148,7 @@ C-----------------------------------------------
       MAX_ID = MAXVAL(ALE_CONNECT%IDGLOB%ID(1:NUMELS + NSVOIS))
 #ifdef MPI
       IF (NSPMD > 1) THEN
-         CALL MPI_ALLREDUCE(MAX_ID, GLOB_DIM, 1, MPI_INT, MPI_MAX, MPI_COMM_WORLD, IERR)
+         CALL MPI_ALLREDUCE(MAX_ID, GLOB_DIM, 1, MPI_INT, MPI_MAX, COMM_RADIOSS, IERR)
       ENDIF
 #endif
 !     solution

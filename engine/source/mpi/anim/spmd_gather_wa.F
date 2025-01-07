@@ -35,6 +35,7 @@ C-----------------------------------------------
 #include      "implicit_f.inc"
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -74,7 +75,7 @@ C-----------------------------------------------
         IF(MODE==0) THEN
         !       collect the local index arraies on the main processor
                 CALL MPI_GATHER(SINDEX,3*(NSECT+1),MPI_INTEGER,
-     .                   RINDEX_PROC,3*(NSECT+1),MPI_INTEGER,0,MPI_COMM_WORLD,ierror)  
+     .                   RINDEX_PROC,3*(NSECT+1),MPI_INTEGER,0,COMM_RADIOSS,ierror)  
         !       sum all the size of local sended arraies in order to get the size 
         !       of the global array on proc 0                  
                 IF(ISPMD==0) THEN
@@ -95,7 +96,7 @@ C-----------------------------------------------
 
                 CALL MPI_GATHERV(BUFFER_S,SIZE_BUFFER_S,MPI_INTEGER,
      .                           BUFFER_R,NB_ELEM_R,SHIFT_R,MPI_INTEGER,
-     .                           0,MPI_COMM_WORLD,ierror)   
+     .                           0,COMM_RADIOSS,ierror)   
         ENDIF
 #endif
        RETURN

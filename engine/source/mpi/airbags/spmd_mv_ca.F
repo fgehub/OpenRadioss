@@ -40,6 +40,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -124,7 +125,7 @@ C
               MSGTYP = MSGOFF
               CALL MPI_ISEND(
      .          BUFS,L,REAL,IT_SPMD(P),MSGTYP,
-     .          MPI_COMM_WORLD,REQ_S(P),IERROR)
+     .          COMM_RADIOSS,REQ_S(P),IERROR)
             END IF
           END DO
         END IF
@@ -145,7 +146,7 @@ C si pmain
               IF(ITYP == 9) SIZ = SIZ + 2*NJET*NVOLU*NGASES
               MSGTYP = MSGOFF
               CALL MPI_RECV(BUFR   ,SIZ           ,REAL  ,IT_SPMD(P),
-     .                      MSGTYP,MPI_COMM_WORLD,STATUS,IERROR    )
+     .                      MSGTYP,COMM_RADIOSS,STATUS,IERROR    )
               NB = BUFR(1)
               L = 1
               DO I = 1, NB
@@ -218,7 +219,7 @@ C
                MSGTYP = MSGOFF2
                CALL MPI_ISEND(
      .           BUFS,L,REAL,IT_SPMD(P),MSGTYP,
-     .           MPI_COMM_WORLD,REQ_S(P),IERROR)
+     .           COMM_RADIOSS,REQ_S(P),IERROR)
              END IF
            END DO
          END IF
@@ -241,7 +242,7 @@ C pmain
             IF(ITYP == 9) SIZ = SIZ +2*NJET*NAV*NGASES
             MSGTYP = MSGOFF2
             CALL MPI_RECV(BUFR   ,SIZ           ,REAL  ,IT_SPMD(P),
-     .                    MSGTYP,MPI_COMM_WORLD,STATUS,IERROR    )
+     .                    MSGTYP,COMM_RADIOSS,STATUS,IERROR    )
             L = 0
             DO I = 1, NAV
               II = ICBAG(1,I)

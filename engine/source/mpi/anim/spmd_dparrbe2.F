@@ -40,6 +40,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -113,14 +114,14 @@ C Proc zero reception des tailles
         DO P=2,NSPMD
            MSGTYP = MSGOFF
            CALL MPI_RECV(P0RECRBE2(1,P),NRBE2G,MPI_INTEGER,IT_SPMD(P),
-     *                   MSGTYP,MPI_COMM_WORLD,STATUS,IERROR)
+     *                   MSGTYP,COMM_RADIOSS,STATUS,IERROR)
         ENDDO
 
       ELSE
 C Procs autres envoi
         MSGTYP = MSGOFF
         CALL MPI_SEND(SZLOCRBE2,NRBE2G,MPI_INTEGER,IT_SPMD(1),
-     .                MSGTYP,MPI_COMM_WORLD,IERROR)
+     .                MSGTYP,COMM_RADIOSS,IERROR)
 
       ENDIF
 
@@ -147,7 +148,7 @@ C ------------------------
          IF (SNRBE2 > 0)THEN
            MSGTYP = MSGOFF2
            CALL  MPI_SEND(SENDBUF,SNRBE2,MPI_INTEGER,IT_SPMD(1),MSGTYP,
-     *                  MPI_COMM_WORLD,IERROR)
+     *                  COMM_RADIOSS,IERROR)
          ENDIF
          DEALLOCATE(SENDBUF)
 
@@ -217,7 +218,7 @@ C Taille du buffer de reception
              ALLOCATE(RECBUF(SIZRBE2))
              MSGTYP = MSGOFF2 
              CALL MPI_RECV(RECBUF,SIZRBE2,MPI_INTEGER,IT_SPMD(P),MSGTYP,
-     *                   MPI_COMM_WORLD,STATUS,IERROR)
+     *                   COMM_RADIOSS,STATUS,IERROR)
 
              PSNRBE2=0
              DO I=1,NRBE2G

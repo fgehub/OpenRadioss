@@ -44,6 +44,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -115,13 +116,13 @@ C
             ELSE
                ITAG=MSGOFF
                CALL MPI_RECV(NNTR, 1, MPI_INTEGER, IT_SPMD(PMAIN),
-     .                       ITAG, MPI_COMM_WORLD, STAT, IERR)
+     .                       ITAG, COMM_RADIOSS, STAT, IERR)
 C
                LEN=10*NNTR
                ALLOCATE(RBUF(LEN))
                ITAG=MSGOFF2
                CALL MPI_RECV(RBUF, LEN, REAL, IT_SPMD(PMAIN),
-     .                       ITAG, MPI_COMM_WORLD, STAT, IERR)
+     .                       ITAG, COMM_RADIOSS, STAT, IERR)
 C
                DO J=1,NNTR
                   NN=FVEL2FA(ELOFF+J)
@@ -144,7 +145,7 @@ C
                NNTR=FVDATA(I)%NNTR
                ITAG=MSGOFF
                CALL MPI_SEND(NNTR, 1, MPI_INTEGER, IT_SPMD(1),
-     .                       ITAG, MPI_COMM_WORLD, IERR)
+     .                       ITAG, COMM_RADIOSS, IERR)
 C
                LEN=10*NNTR
                ALLOCATE(RBUF(LEN))
@@ -194,7 +195,7 @@ C
                ENDDO
                ITAG=MSGOFF2
                CALL MPI_SEND(RBUF, LEN, REAL, IT_SPMD(1),
-     .                       ITAG, MPI_COMM_WORLD, IERR)
+     .                       ITAG, COMM_RADIOSS, IERR)
 C
                DEALLOCATE(RBUF)        
             ENDIF

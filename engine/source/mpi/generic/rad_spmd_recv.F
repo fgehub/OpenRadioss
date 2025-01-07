@@ -38,6 +38,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   D u m m y   A r g u m e n t s
@@ -61,9 +62,9 @@ C-----------------------------------------------
  1    LEN = MIN(SIZ_I,BUFSIZMAX)
 
       CALL MPI_RECV(A(ADD),LEN,MPI_BYTE,IT_SPMD(ISPMD+1),MSGTAG,
-     .              MPI_COMM_WORLD,STATUS,ierror)
+     .              COMM_RADIOSS,STATUS,ierror)
       CALL MPI_SEND(A,0,MPI_BYTE,IT_SPMD(ISPMD+1),MSGTAG,
-     .              MPI_COMM_WORLD,ierror)
+     .              COMM_RADIOSS,ierror)
 
       ADD = ADD + LEN/INTSIZE
       SIZ_I = SIZ_I - LEN

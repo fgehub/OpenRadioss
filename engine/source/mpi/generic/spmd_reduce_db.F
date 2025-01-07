@@ -36,6 +36,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   D u m m y   A r g u m e n t s
@@ -65,7 +66,7 @@ C-----------------------------------------------
 
 !       ------------------
 !       mpi comm reduce
-        CALL MPI_REDUCE(VALUE,RES,MY_SIZE,MPI_DOUBLE_PRECISION,MPI_OPERATION,MY_RANK,MPI_COMM_WORLD,error)
+        CALL MPI_REDUCE(VALUE,RES,MY_SIZE,MPI_DOUBLE_PRECISION,MPI_OPERATION,MY_RANK,COMM_RADIOSS,error)
 !       ------------------
 #else
         RES = 0

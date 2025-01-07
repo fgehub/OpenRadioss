@@ -39,6 +39,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   D u m m y   A r g u m e n t s
@@ -51,7 +52,7 @@ C-----------------------------------------------
 C-----------------------------------------------
 C   S o u r c e  L i n e s
 C-----------------------------------------------
-      CALL MPI_ABORT(MPI_COMM_WORLD,ICODE)
+      CALL MPI_ABORT(COMM_RADIOSS,ICODE)
       CALL MY_EXIT(ICODE)
 
       RETURN

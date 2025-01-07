@@ -39,6 +39,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -66,7 +67,7 @@ C-----------------------------------------------
       S1 = 1
 
       ! Send Local sizes to Zero
-      CALL MPI_GATHER(LEN,S1,MPI_INTEGER,SIZES,S1,MPI_INTEGER,0,MPI_COMM_WORLD,ierror)
+      CALL MPI_GATHER(LEN,S1,MPI_INTEGER,SIZES,S1,MPI_INTEGER,0,COMM_RADIOSS,ierror)
 
 
       IF(ISPMD == 0) THEN
@@ -84,10 +85,10 @@ C-----------------------------------------------
         ALLOCATE(SRBUF2(1))
       ENDIF
 
-      CALL MPI_GATHERV(SRBUF,LEN,MPI_INTEGER,SRBUF2,SIZES,POINTERS,MPI_INTEGER,0,MPI_COMM_WORLD,ierror)
+      CALL MPI_GATHERV(SRBUF,LEN,MPI_INTEGER,SRBUF2,SIZES,POINTERS,MPI_INTEGER,0,COMM_RADIOSS,ierror)
 
 
-      CALL MPI_BARRIER(MPI_COMM_WORLD,ierror)
+      CALL MPI_BARRIER(COMM_RADIOSS,ierror)
 
       IF(ISPMD == 0) THEN
         DO I=1,LRECV

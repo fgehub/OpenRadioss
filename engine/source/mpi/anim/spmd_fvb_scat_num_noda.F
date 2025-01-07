@@ -43,6 +43,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -63,7 +64,7 @@ C-----------------------------------------------
 
       PMAIN=FVSPMD(IFV)%PMAIN
       CALL MPI_BCAST(VECTOR, LEN, REAL, PMAIN-1,
-     .               MPI_COMM_WORLD, IERR)
+     .               COMM_RADIOSS, IERR)
 
 #endif
       RETURN

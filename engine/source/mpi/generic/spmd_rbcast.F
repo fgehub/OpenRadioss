@@ -66,6 +66,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -92,10 +93,10 @@ C     si FROM = NSPMD  ADD = 1 de NSPMD sur les autres
 
       IF(ISPMD==FROM)THEN
         call MPI_BCAST(TABI,N1*N2,REAL,FROM,
-     .                 MPI_COMM_WORLD,ierror)
+     .                 COMM_RADIOSS,ierror)
       ELSE
         call MPI_BCAST(TABR,N1*N2,REAL,FROM,
-     .                 MPI_COMM_WORLD,ierror)
+     .                 COMM_RADIOSS,ierror)
       ENDIF
 
 #endif

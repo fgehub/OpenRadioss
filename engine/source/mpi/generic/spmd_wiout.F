@@ -48,6 +48,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -84,7 +85,7 @@ C IWIOUT est utilise pour connaitre le nb max de characteres a echanger
       IWIOUT_SPMD(1:NSPMD) = 0
       CALL MPI_GATHER( IWIOUT_SAVE,1,MPI_INTEGER,
      .                 IWIOUT_SPMD,1,MPI_INTEGER,
-     .                 0,MPI_COMM_WORLD,ierror)
+     .                 0,COMM_RADIOSS,ierror)
 
 
       LOC_PROC = ISPMD + 1
@@ -111,7 +112,7 @@ C IWIOUT est utilise pour connaitre le nb max de characteres a echanger
           P = PROC_RCV(I)
           MSGTYP = MSGOFF
           CALL MPI_IRECV(IWA(1+DISPLACEMENT(I)),IWIOUT_SPMD(P)+1,MPI_INTEGER,IT_SPMD(P),
-     .                  MSGTYP,MPI_COMM_WORLD,REQ_R(I),ierror)
+     .                  MSGTYP,COMM_RADIOSS,REQ_R(I),ierror)
 
 
         ENDDO
@@ -159,7 +160,7 @@ C rewind fait ds check        REWIND(UNIT=IOUT)
             WRITE(UNIT=IOUT,IOSTAT=IOS,FMT='(A)')
             MSGTYP = MSGOFF
             CALL MPI_ISEND(IWA   ,SIZ           ,MPI_INTEGER,IT_SPMD(1),
-     .                    MSGTYP,MPI_COMM_WORLD,REQ_S,ierror     )
+     .                    MSGTYP,COMM_RADIOSS,REQ_S,ierror     )
 
             CALL MPI_WAIT(REQ_S,STATUS,IERROR)
             !   ------------------

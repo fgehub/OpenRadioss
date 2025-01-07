@@ -43,6 +43,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -142,7 +143,7 @@ C
           B = BUFSEND(I)
           SIZ = BUFSEND(I+1)-BUFSEND(I)
           CALL MPI_ISEND(BUFSPM(B),SIZ,MPI_INTEGER,IT_SPMD(I),MSGTYP,
-     .       MPI_COMM_WORLD,ISD(I),ierror)
+     .       COMM_RADIOSS,ISD(I),ierror)
 
         ENDIF
       ENDDO
@@ -154,11 +155,11 @@ C
 
           MSGTYP = MSGOFF
           CALL MPI_PROBE(IT_SPMD(I),MSGTYP,
-     .                  MPI_COMM_WORLD,STATUS,ierror)
+     .                  COMM_RADIOSS,STATUS,ierror)
           CALL MPI_GET_COUNT(STATUS,MPI_INTEGER,SIZ,ierror)
 
           CALL MPI_RECV(BUFRECVM(L),SIZ,MPI_INTEGER,IT_SPMD(I),MSGTYP,
-     .                MPI_COMM_WORLD,STATUS,ierror)
+     .                COMM_RADIOSS,STATUS,ierror)
 
           L = L + SIZ
           BUFRECVM(L)=0
@@ -224,7 +225,7 @@ C
       IF (ISPMD/=0 .AND .L>0) THEN
         MSGTYP = MSGOFF2
         CALL MPI_SEND(BUFSPO,L,MPI_INTEGER,IT_SPMD(1),MSGTYP,
-     .       MPI_COMM_WORLD,ierror)
+     .       COMM_RADIOSS,ierror)
       ENDIF
 
       IF (ISPMD==0) THEN
@@ -248,11 +249,11 @@ C
             MSGTYP = MSGOFF2
             PTRPO(I) = LPO
             CALL MPI_PROBE(IT_SPMD(I),MSGTYP,
-     .                   MPI_COMM_WORLD,STATUS,ierror)
+     .                   COMM_RADIOSS,STATUS,ierror)
             CALL MPI_GET_COUNT(STATUS,MPI_INTEGER,SIZ,ierror)
 
             CALL MPI_RECV(PORBY(LPO),SIZ,MPI_INTEGER,IT_SPMD(I),
-     .                MSGTYP, MPI_COMM_WORLD,STATUS,ierror)
+     .                MSGTYP, COMM_RADIOSS,STATUS,ierror)
             LPO=LPO+SIZ
           ELSE
             PTRPO(I) = LPO

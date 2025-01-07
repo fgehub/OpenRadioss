@@ -58,6 +58,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -140,8 +141,8 @@ C-----------------------------------------------
                         KEY = 1
                     ENDIF       
                     !   create the communicator
-                    CALL MPI_COMM_SPLIT(MPI_COMM_WORLD,COMM_TRI7VOX(NIN)%COLOR,KEY,COMM_TRI7VOX(NIN)%COMM,CODE)
-                    CALL MPI_COMM_SPLIT(MPI_COMM_WORLD,COMM_TRI7VOX(NIN)%COLOR,KEY,SORT_COMM(NIN)%COMM,CODE)
+                    CALL MPI_COMM_SPLIT(COMM_RADIOSS,COMM_TRI7VOX(NIN)%COLOR,KEY,COMM_TRI7VOX(NIN)%COMM,CODE)
+                    CALL MPI_COMM_SPLIT(COMM_RADIOSS,COMM_TRI7VOX(NIN)%COLOR,KEY,SORT_COMM(NIN)%COMM,CODE)
                     IF(COMM_TRI7VOX(NIN)%COLOR==1) THEN
                         CALL MPI_COMM_RANK(COMM_TRI7VOX(NIN)%comm,COMM_TRI7VOX(NIN)%RANK,CODE)
                     ENDIF
@@ -187,7 +188,7 @@ C-----------------------------------------------
             KEY = 1
         ENDIF       
         !   create the communicator for the spmd_get_inacti communication
-        CALL MPI_COMM_SPLIT(MPI_COMM_WORLD,COLOR_INACTI,KEY,COMM_INACTI,CODE)  
+        CALL MPI_COMM_SPLIT(COMM_RADIOSS,COLOR_INACTI,KEY,COMM_INACTI,CODE)  
 !           -----------------------------
 
 !           -----------------------------
@@ -200,7 +201,7 @@ C-----------------------------------------------
             KEY = 1
         ENDIF       
         !   create the communicator for the type25+solid erosion communication
-        CALL MPI_COMM_SPLIT(MPI_COMM_WORLD,COLOR_INT25_SOLID_EROSION,KEY,COMM_INT25_SOLID_EROSION,CODE)  
+        CALL MPI_COMM_SPLIT(COMM_RADIOSS,COLOR_INT25_SOLID_EROSION,KEY,COMM_INT25_SOLID_EROSION,CODE)  
 c       write(*,*) 'need comm',ispmd,NEED_COMM_INT25_SOLID_EROSION
 !           -----------------------------
 #endif

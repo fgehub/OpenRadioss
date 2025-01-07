@@ -36,6 +36,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   D u m m y   A r g u m e n t s
@@ -55,7 +56,7 @@ C   S o u r c e  L i n e s
 C-----------------------------------------------
       CALL MPI_GATHER(SENDBUF,LENGTH,MPI_DOUBLE_PRECISION,
      .                RECVBUF,LENGTH,MPI_DOUBLE_PRECISION,
-     .                RANK,MPI_COMM_WORLD,IERROR)
+     .                RANK,COMM_RADIOSS,IERROR)
 #endif
       RETURN
       END

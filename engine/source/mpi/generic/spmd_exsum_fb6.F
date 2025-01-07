@@ -38,6 +38,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   D u m m y   A r g u m e n t s
@@ -60,7 +61,7 @@ C-----------------------------------------------
       DIM=DIM6*6*DIM_EXCH
 C
       CALL MPI_ALLREDUCE(BUF6,FB6,DIM,MPI_DOUBLE_PRECISION,   
-     .                   MPI_SUM,MPI_COMM_WORLD,IERROR)
+     .                   MPI_SUM,COMM_RADIOSS,IERROR)
 C
 #endif
       RETURN

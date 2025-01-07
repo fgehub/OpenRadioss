@@ -48,6 +48,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -89,7 +90,7 @@ C-----------------------------------------------
           MSGTYP = MSGOFF 
           CALL MPI_IRECV(
      S      RBUF(IDEB),SIZ,MPI_DOUBLE_PRECISION,IT_SPMD(I),MSGTYP,
-     G      MPI_COMM_WORLD,REQ_R(L),IERROR)
+     G      COMM_RADIOSS,REQ_R(L),IERROR)
           IDEB = IDEB + SIZ
         ENDIF
       ENDDO
@@ -123,7 +124,7 @@ C
         MSGTYP = MSGOFF
         CALL MPI_ISEND(
      S    SBUF(IDEB),SIZ,MPI_DOUBLE_PRECISION,IT_SPMD(I),MSGTYP,
-     G    MPI_COMM_WORLD,REQ_S(L),IERROR)
+     G    COMM_RADIOSS,REQ_S(L),IERROR)
         IDEB = IDEB + SIZ
       ENDDO
 C
@@ -181,6 +182,7 @@ C   M e s s a g e   P a s s i n g
 C-----------------------------------------------
 #ifdef MPI
 #include "mpif.h"
+#include "mpi_comm.inc"
 #endif
 C-----------------------------------------------
 C   C o m m o n   B l o c k s
@@ -222,7 +224,7 @@ C-----------------------------------------------
           MSGTYP = MSGOFF 
           CALL MPI_IRECV(
      S      RBUF(IDEB),SIZ,MPI_DOUBLE_PRECISION,IT_SPMD(I),MSGTYP,
-     G      MPI_COMM_WORLD,REQ_R(L),IERROR)
+     G      COMM_RADIOSS,REQ_R(L),IERROR)
           IDEB = IDEB + SIZ
         ENDIF
       ENDDO
@@ -265,7 +267,7 @@ C
         MSGTYP = MSGOFF
         CALL MPI_ISEND(
      S    SBUF(IDEB),SIZ,MPI_DOUBLE_PRECISION,IT_SPMD(I),MSGTYP,
-     G    MPI_COMM_WORLD,REQ_S(L),IERROR)
+     G    COMM_RADIOSS,REQ_S(L),IERROR)
         IDEB = IDEB + SIZ
       ENDDO
 C
